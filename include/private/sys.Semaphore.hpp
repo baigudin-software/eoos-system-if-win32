@@ -2,24 +2,23 @@
  * Semaphore class.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYSTEM_SEMAPHORE_HPP_
-#define SYSTEM_SEMAPHORE_HPP_
+#ifndef SYS_SEMAPHORE_HPP_
+#define SYS_SEMAPHORE_HPP_
 
-#include "system.Object.hpp"
+#include "sys.Object.hpp"
 #include "api.Semaphore.hpp"
-#include "system.Interrupt.hpp"
+#include "sys.Interrupt.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
-        class Semaphore : public system::Object, public api::Semaphore
+        class Semaphore : public Object, public api::Semaphore
         {
-            typedef system::Semaphore Self;
-            typedef system::Object    Parent;
+            typedef Semaphore Self;
+            typedef ::eoos::sys::Object Parent;
 
         public:
 
@@ -28,9 +27,9 @@ namespace local
              *
              * @param permits the initial number of permits available.
              */
-            Semaphore(int32 permits) : Parent()
+            Semaphore(int32_t permits) : Parent()
             {
-                bool const isConstructed = construct(permits);
+                bool_t const isConstructed = construct(permits);
                 setConstructed( isConstructed );
             }
 
@@ -46,7 +45,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -56,7 +55,7 @@ namespace local
              *
              * @return true if the semaphore is acquired successfully.
              */
-            virtual bool acquire()
+            virtual bool_t acquire()
             {
                 if( not Self::isConstructed() ) return false;
                 return false;
@@ -68,7 +67,7 @@ namespace local
              * @param permits the number of permits to acquire.
              * @return true if the semaphore is acquired successfully.
              */
-            virtual bool acquire(int32 permits)
+            virtual bool_t acquire(int32_t permits)
             {
                 if( not Self::isConstructed() ) return false;
                 return false;
@@ -87,7 +86,7 @@ namespace local
              *
              * @param permits the number of permits to release.
              */
-            virtual void release(int32 permits)
+            virtual void release(int32_t permits)
             {
                 if( not Self::isConstructed() ) return;
             }
@@ -97,7 +96,7 @@ namespace local
              *
              * @return true if this semaphore has fairness set true.
              */
-            virtual bool isFair() const
+            virtual bool_t isFair() const
             {
                 return false;
             }
@@ -107,7 +106,7 @@ namespace local
              *
              * @return true if this resource is blocked.
              */
-            virtual bool isBlocked() const
+            virtual bool_t isBlocked() const
             {
                 if( not Self::isConstructed() ) return false;
                 return false;
@@ -121,7 +120,7 @@ namespace local
              * @param permits the initial number of permits available.
              * @return true if object has been constructed successfully.
              */
-            bool construct(int32 permits)
+            bool_t construct(int32_t permits)
             {
                 if( not Self::isConstructed() ) return false;
                 return true;
@@ -145,4 +144,4 @@ namespace local
         };
     }
 }
-#endif // SYSTEM_SEMAPHORE_HPP_
+#endif // SYS_SEMAPHORE_HPP_

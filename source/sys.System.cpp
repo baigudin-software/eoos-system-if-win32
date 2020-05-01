@@ -2,18 +2,17 @@
  * The operating system class.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#include "system.System.hpp"
-#include "system.Mutex.hpp"
-#include "system.Semaphore.hpp"
-#include "system.Interrupt.hpp"
+#include "sys.System.hpp"
+#include "sys.Mutex.hpp"
+#include "sys.Semaphore.hpp"
+#include "sys.Interrupt.hpp"
 #include "Program.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
         /**
          * Calls the operating system.
@@ -33,7 +32,7 @@ namespace local
             gi_        (),
             runtime_   (),
             scheduler_ (){
-            bool const isConstructed = construct();
+            bool_t const isConstructed = construct();
             setConstructed( isConstructed );
         }
 
@@ -49,7 +48,7 @@ namespace local
          *
          * @return true if object has been constructed successfully.
          */
-        bool System::isConstructed() const
+        bool_t System::isConstructed() const
         {
             return Parent::isConstructed();
         }
@@ -59,7 +58,7 @@ namespace local
          *
          * @return time in nanoseconds.
          */
-        int64 System::getTime() const
+        int64_t System::getTime() const
         {
             return 0;
         }
@@ -123,7 +122,7 @@ namespace local
         /**
          * Creates a new mutex resource.
          *
-         * @return a new mutex resource, or NULL if an error has been occurred.
+         * @return a new mutex resource, or NULLPTR if an error has been occurred.
          */
         api::Mutex* System::createMutex()
         {
@@ -136,9 +135,9 @@ namespace local
          *
          * @param permits - the initial number of permits available.
          * @param isFair  - true if this semaphore will guarantee FIFO granting of permits under contention.
-         * @return a new semaphore resource, or NULL if an error has been occurred.
+         * @return a new semaphore resource, or NULLPTR if an error has been occurred.
          */
-        api::Semaphore* System::createSemaphore(int32 permits, bool isFair)
+        api::Semaphore* System::createSemaphore(int32_t permits, bool_t isFair)
         {
             api::Semaphore* res = new Semaphore(permits);
             return proveResource(res);
@@ -149,9 +148,9 @@ namespace local
          *
          * @param handler - user class which implements an interrupt handler interface.
          * @param source  - available interrupt source number.
-         * @return a new interrupt resource, or NULL if an error has been occurred.
+         * @return a new interrupt resource, or NULLPTR if an error has been occurred.
          */
-        api::Interrupt* System::createInterrupt(api::Task& handler, int32 source)
+        api::Interrupt* System::createInterrupt(api::Task& handler, int32_t source)
         {
             api::Interrupt* res = new Interrupt(handler, source);
             return proveResource(res);
@@ -172,9 +171,9 @@ namespace local
          *
          * @return zero, or error code if the execution has been terminated.
          */
-        int32 System::execute()
+        int32_t System::execute()
         {
-            int32 error;
+            int32_t error;
             if( not Self::isConstructed() )
             {
                 error = ERROR_UNDEFINED;
@@ -193,7 +192,7 @@ namespace local
          */
         api::System& System::call()
         {
-            if(system_ == NULL)
+            if(system_ == NULLPTR)
             {
                 terminate(ERROR_SYSCALL_CALLED);
             }
@@ -208,8 +207,8 @@ namespace local
         void System::terminate(Error)
         {
             // ... TODO ...
-            bool const is = Interrupt::disableAll();
-            volatile bool const isTerminate = true;
+            bool_t const is = Interrupt::disableAll();
+            volatile bool_t const isTerminate = true;
             while( isTerminate ){};
             Interrupt::enableAll(is);
         }
@@ -219,12 +218,12 @@ namespace local
          *
          * @return true if object has been constructed successfully.
          */
-        bool System::construct()
+        bool_t System::construct()
         {
-            bool res = Self::isConstructed();
+            bool_t res = Self::isConstructed();
             while(res == true)
             {
-                if( system_ != NULL )
+                if( system_ != NULLPTR )
                 {
                     res = false;
                     continue;
@@ -259,6 +258,6 @@ namespace local
         /**
          * The operating system interface.
          */
-        api::System* System::system_ = NULL;
+        api::System* System::system_ = NULLPTR;
     }
 }

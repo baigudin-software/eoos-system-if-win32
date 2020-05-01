@@ -2,17 +2,16 @@
  * The operating system memory allocator.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYSTEM_ALLOCATOR_HPP_
-#define SYSTEM_ALLOCATOR_HPP_
+#ifndef SYS_ALLOCATOR_HPP_
+#define SYS_ALLOCATOR_HPP_
 
 #include "Types.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
         class Allocator
         {
@@ -37,4 +36,4 @@ namespace local
         };
     }
 }
-#endif // SYSTEM_ALLOCATOR_HPP_
+#endif // SYS_ALLOCATOR_HPP_

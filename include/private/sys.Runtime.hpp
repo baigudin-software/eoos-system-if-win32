@@ -2,24 +2,23 @@
  * Runtime system execution.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYSTEM_RUNTIME_HPP_
-#define SYSTEM_RUNTIME_HPP_
+#ifndef SYS_RUNTIME_HPP_
+#define SYS_RUNTIME_HPP_
 
-#include "system.Object.hpp"
+#include "sys.Object.hpp"
 #include "api.Runtime.hpp"
-#include "system.Interrupt.hpp"
+#include "sys.Interrupt.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
-        class Runtime : public system::Object, public api::Runtime
+        class Runtime : public Object, public api::Runtime
         {
-            typedef system::Runtime Self;
-            typedef system::Object  Parent;
+            typedef Runtime Self;
+            typedef ::eoos::sys::Object Parent;
 
         public:
 
@@ -42,7 +41,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -53,7 +52,7 @@ namespace local
              * @param path a system path to a program.
              * @return true if program has been loaded successfully.
              */
-            virtual bool load(const char* path)
+            virtual bool_t load(const char_t* path)
             {
                 if( not Self::isConstructed() ) return false;
                 return false;
@@ -64,11 +63,11 @@ namespace local
              *
              * @param status a termination status.
              */
-            virtual void exit(int32 const status)
+            virtual void exit(int32_t const status)
             {
                 // ... TODO ...
-                bool const is = Interrupt::disableAll();
-                volatile bool const isTerminate = true;
+                bool_t const is = Interrupt::disableAll();
+                volatile bool_t const isTerminate = true;
                 while( isTerminate ){};
                 Interrupt::enableAll(is);
             }
@@ -93,4 +92,4 @@ namespace local
         };
     }
 }
-#endif // SYSTEM_RUNTIME_HPP_
+#endif // SYS_RUNTIME_HPP_

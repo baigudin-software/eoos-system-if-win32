@@ -5,23 +5,23 @@
  * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
  * @license   http://embedded.team/license/
  */
-#ifndef SYSTEM_SCHEDULER_THREAD_HPP_
-#define SYSTEM_SCHEDULER_THREAD_HPP_
+#ifndef SYS_SCHEDULER_THREAD_HPP_
+#define SYS_SCHEDULER_THREAD_HPP_
 
-#include "system.Object.hpp"
+#include "sys.Object.hpp"
 #include "api.Thread.hpp"
 #include "api.Task.hpp"
-#include "system.Semaphore.hpp"
-#include "system.Interrupt.hpp"
+#include "sys.Semaphore.hpp"
+#include "sys.Interrupt.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
-        class SchedulerThread : public system::Object, public api::Thread
+        class SchedulerThread : public Object, public api::Thread
         {
-            typedef system::SchedulerThread Self;
-            typedef system::Object          Parent;
+            typedef SchedulerThread        Self;
+            typedef ::eoos::sys::Object Parent;
 
         public:
 
@@ -54,7 +54,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -66,7 +66,7 @@ namespace local
             {
                 if( not Self::isConstructed() ) return;
                 if( status_ != NEW ) return;
-                bool is = Interrupt::disableAll();
+                bool_t is = Interrupt::disableAll();
                 scheduler_->addThread(this);
                 status_ = RUNNABLE;
                 Interrupt::enableAll(is);
@@ -88,21 +88,21 @@ namespace local
              * @param millis a time to sleep in milliseconds.
              * @param nanos  an additional nanoseconds to sleep.
              */
-            virtual void sleep(int64 millis, int32 nanos)
+            virtual void sleep(int64_t millis, int32_t nanos)
             {
                 if( not Self::isConstructed() ) return;
                 if(millis == 0)
                 {
-                    // int32 micros = nanos / 1000;
+                    // int32_t micros = nanos / 1000;
                     // The sleep_u OS call does not cause switching threads
                     // and uses all system time quant. Therefore, use the call
                     // only for nanosecond requests
 
-                    // TODO: sleep_u( static_cast<uint32>(micros) );
+                    // TODO: sleep_u( static_cast<uint32_t>(micros) );
                 }
                 else
                 {
-                    // TODO: sleep_m( static_cast<uint32>(millis) );
+                    // TODO: sleep_m( static_cast<uint32_t>(millis) );
                 }
             }
 
@@ -121,7 +121,7 @@ namespace local
              *
              * @return the thread identifier, or -1 if an error has been occurred.
              */
-            virtual int64 getId() const
+            virtual int64_t getId() const
             {
                 return id_;
             }
@@ -131,7 +131,7 @@ namespace local
              *
              * @return priority value, or -1 if an error has been occurred.
              */
-            virtual int32 getPriority() const
+            virtual int32_t getPriority() const
             {
                 return NORM_PRIORITY;
             }
@@ -141,7 +141,7 @@ namespace local
              *
              * @param priority number of priority in range [MIN_PRIORITY, MAX_PRIORITY], or LOCK_PRIORITY.
              */
-            virtual void setPriority(int32 priority)
+            virtual void setPriority(int32_t priority)
             {
             }
 
@@ -162,7 +162,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            bool construct()
+            bool_t construct()
             {
                 if( not Self::isConstructed() ) return false;
                 if( not task_->isConstructed() ) return false;
@@ -179,9 +179,9 @@ namespace local
                 // Set default address of .bss section
                 attr.bss = 0;
                 // Set no exit vector
-                attr.exit_vector = NULL;
+                attr.exit_vector = NULLPTR;
                 res_ = prc_create(&run, &this_, sizeof(SchedulerThread*), &attr);
-                id_ = static_cast<int64>(res_);
+                id_ = static_cast<int64_t>(res_);
                 return id_ >= 0 ? true : false;
                 */
                 return false;
@@ -190,14 +190,14 @@ namespace local
             /**
              * Runs a method of Runnable interface start vector.
              */
-            int32 run()
+            int32_t run()
             {
                 // Wait for calling start method
                 sem_.acquire();
                 // Call user main method
-                int32 const error = task_->start();
+                int32_t const error = task_->start();
                 // Kill the thread
-                bool is = Interrupt::disableAll();
+                bool_t is = Interrupt::disableAll();
                 status_ = DEAD;
                 scheduler_->removeThread(this);
                 Interrupt::enableAll(is);
@@ -209,9 +209,9 @@ namespace local
              */
             static int run(void* argument)
             {
-                if(argument == NULL) return -1;
+                if(argument == NULLPTR) return -1;
                 SchedulerThread* thread = *reinterpret_cast<SchedulerThread**>(argument);
-                if(thread == NULL || not thread->isConstructed() ) return -1;
+                if(thread == NULLPTR || not thread->isConstructed() ) return -1;
                 // Invoke the member function through the pointer
                 return thread->run();
             }
@@ -249,12 +249,12 @@ namespace local
             /**
              * Current identifier.
              */
-            int64 id_;
+            int64_t id_;
 
             /**
              * Current identifier is a resource of porting OS process.
              */
-            int32 res_;
+            int32_t res_;
 
             /**
              * Current status.
@@ -269,4 +269,4 @@ namespace local
         };
     }
 }
-#endif // SYSTEM_SCHEDULER_THREAD_HPP_
+#endif // SYS_SCHEDULER_THREAD_HPP_

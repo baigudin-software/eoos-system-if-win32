@@ -2,14 +2,13 @@
  * Hardware interrupt resource.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#include "system.Interrupt.hpp"
+#include "sys.Interrupt.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
         /**
          * Constructor.
@@ -17,9 +16,9 @@ namespace local
          * @param handler pointer to user class which implements an interrupt handler interface.
          * @param source  available interrupt source.
          */
-        Interrupt::Interrupt(api::Task& handler, int32 source) : Parent()
+        Interrupt::Interrupt(api::Task& handler, int32_t source) : Parent()
         {
-            bool const isConstructed = construct(&handler, source);
+            bool_t const isConstructed = construct(&handler, source);
             setConstructed( isConstructed );
         }
 
@@ -37,7 +36,7 @@ namespace local
          * @param source  available interrupt source.
          * @return true if object has been constructed successfully.
          */
-        bool Interrupt::construct(api::Task* handler, int32 source)
+        bool_t Interrupt::construct(api::Task* handler, int32_t source)
         {
             if( not Self::isConstructed() ) return false;
             return true;
@@ -48,7 +47,7 @@ namespace local
          *
          * @return true if object has been constructed successfully.
          */
-        bool Interrupt::isConstructed() const
+        bool_t Interrupt::isConstructed() const
         {
             return Parent::isConstructed();
         }
@@ -79,7 +78,7 @@ namespace local
          *
          * @return an interrupt enable source bit value before method was called.
          */
-        bool Interrupt::disable()
+        bool_t Interrupt::disable()
         {
             return false;
         }
@@ -89,7 +88,7 @@ namespace local
          *
          * @param status returned status by disable method.
          */
-        void Interrupt::enable(bool status)
+        void Interrupt::enable(bool_t status)
         {
         }
 
@@ -98,7 +97,7 @@ namespace local
          *
          * @return global interrupts enable bit value before method was called.
          */
-        bool Interrupt::disableAll()
+        bool_t Interrupt::disableAll()
         {
             return false;
         }
@@ -111,7 +110,7 @@ namespace local
          *
          * @param status the returned status by disable method.
          */
-        void Interrupt::enableAll(bool status)
+        void Interrupt::enableAll(bool_t status)
         {
         }
 

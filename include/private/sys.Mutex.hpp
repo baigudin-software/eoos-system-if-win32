@@ -2,23 +2,22 @@
  * Mutex class.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYSTEM_MUTEX_HPP_
-#define SYSTEM_MUTEX_HPP_
+#ifndef SYS_MUTEX_HPP_
+#define SYS_MUTEX_HPP_
 
-#include "system.Object.hpp"
+#include "sys.Object.hpp"
 #include "api.Mutex.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
-        class Mutex : public system::Object, public api::Mutex
+        class Mutex : public Object, public api::Mutex
         {
-                typedef system::Mutex  Self;
-                typedef system::Object Parent;
+                typedef Mutex Self;
+                typedef ::eoos::sys::Object Parent;
 
         public:
 
@@ -27,7 +26,7 @@ namespace local
              */
             Mutex() : Parent()
             {
-                bool const isConstructed = construct();
+                bool_t const isConstructed = construct();
                 setConstructed( isConstructed );
             }
 
@@ -43,7 +42,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -54,7 +53,7 @@ namespace local
              *
              * @return true if the mutex is lock successfully.
              */
-            virtual bool lock()
+            virtual bool_t lock()
             {
                 if( not Self::isConstructed() ) return false;
                 return false;
@@ -73,7 +72,7 @@ namespace local
              *
              * @return true if this resource is blocked.
              */
-            virtual bool isBlocked()const
+            virtual bool_t isBlocked()const
             {
                 if( not Self::isConstructed() ) return false;
                 return false;
@@ -86,7 +85,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            bool construct()
+            bool_t construct()
             {
                 if( not Self::isConstructed() ) return false;
                 return true;
@@ -110,4 +109,4 @@ namespace local
         };
     }
 }
-#endif // SYSTEM_MUTEX_HPP_
+#endif // SYS_MUTEX_HPP_

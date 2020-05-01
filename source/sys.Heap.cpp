@@ -2,15 +2,14 @@
  * The operating system heap memory.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2018-2020, Sergey Baigudin, Baigudin Software
  */
-#include "system.Heap.hpp"
-#include "system.Allocator.hpp"
+#include "sys.Heap.hpp"
+#include "sys.Allocator.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
         /**
          * Constructor.
@@ -31,7 +30,7 @@ namespace local
          *
          * @return true if object has been constructed successfully.
          */
-        bool Heap::isConstructed() const
+        bool_t Heap::isConstructed() const
         {
             return Parent::isConstructed();
         }
@@ -40,15 +39,15 @@ namespace local
          * Allocates memory.
          *
          * @param size - required memory size in byte.
-         * @param ptr  - NULL value becomes to allocate memory, and
+         * @param ptr  - NULLPTR value becomes to allocate memory, and
          *               other given values are simply returned
          *               as memory address.
-         * @return pointer to allocated memory or NULL.
+         * @return pointer to allocated memory or NULLPTR.
          */
         void* Heap::allocate(size_t const size, void* const ptr)
         {
             void* addr;
-            if(ptr == NULL)
+            if(ptr == NULLPTR)
             {
                 addr = Allocator::allocate(size);
             }

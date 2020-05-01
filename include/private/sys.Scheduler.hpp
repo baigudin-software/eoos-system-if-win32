@@ -2,27 +2,26 @@
  * Thread tasks scheduler.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYSTEM_SCHEDULER_HPP_
-#define SYSTEM_SCHEDULER_HPP_
+#ifndef SYS_SCHEDULER_HPP_
+#define SYS_SCHEDULER_HPP_
 
-#include "system.Object.hpp"
+#include "sys.Object.hpp"
 #include "api.Scheduler.hpp"
-#include "system.GlobalThread.hpp"
-#include "library.LinkedList.hpp"
+#include "sys.GlobalThread.hpp"
+#include "lib.LinkedList.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
         class SchedulerThread;
 
-        class Scheduler : public system::Object, public api::Scheduler
+        class Scheduler : public Object, public api::Scheduler
         {
-            typedef system::Scheduler Self;
-            typedef system::Object    Parent;
+            typedef Scheduler Self;
+            typedef ::eoos::sys::Object Parent;
 
         public:
 
@@ -41,7 +40,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const;
+            virtual bool_t isConstructed() const;
 
             /**
              * Creates a new thread.
@@ -75,7 +74,7 @@ namespace local
              *
              * @return true if thread has been added successfully.
              */
-            bool addThread(SchedulerThread* thread);
+            bool_t addThread(SchedulerThread* thread);
 
             /**
              * Removes the first occurrence of the specified thread.
@@ -95,7 +94,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            bool construct();
+            bool_t construct();
 
             /**
              * Copy constructor.
@@ -120,9 +119,9 @@ namespace local
             /**
              * The tasks list.
              */
-            library::LinkedList< SchedulerThread* > threads_;
+            lib::LinkedList< SchedulerThread* > threads_;
 
         };
     }
 }
-#endif // SYSTEM_SCHEDULER_HPP_
+#endif // SYS_SCHEDULER_HPP_

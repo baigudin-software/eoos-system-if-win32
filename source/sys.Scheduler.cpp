@@ -2,24 +2,23 @@
  * Thread tasks scheduler.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2017, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
  */
-#include "system.Scheduler.hpp"
-#include "system.SchedulerThread.hpp"
-#include "system.System.hpp"
-#include "system.Interrupt.hpp"
+#include "sys.Scheduler.hpp"
+#include "sys.SchedulerThread.hpp"
+#include "sys.System.hpp"
+#include "sys.Interrupt.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
         /**
          * Constructor.
          */
         Scheduler::Scheduler() : Parent(),
             globalThread_  (),
-            threads_       (NULL){
+            threads_       (NULLPTR){
             setConstructed( construct() );
         }
 
@@ -35,7 +34,7 @@ namespace local
          *
          * @return true if object has been constructed successfully.
          */
-        bool Scheduler::isConstructed() const
+        bool_t Scheduler::isConstructed() const
         {
             return Parent::isConstructed();
         }
@@ -48,12 +47,12 @@ namespace local
          */
         api::Thread* Scheduler::createThread(api::Task& task)
         {
-            if( not Self::isConstructed() ) return NULL;
+            if( not Self::isConstructed() ) return NULLPTR;
             SchedulerThread* thread = new SchedulerThread(task, this);
-            if(thread == NULL) return NULL;
+            if(thread == NULLPTR) return NULLPTR;
             if(thread->isConstructed()) return thread;
             delete thread;
-            return NULL;
+            return NULLPTR;
         }
 
         /**
@@ -67,17 +66,17 @@ namespace local
             {
                 System::terminate(ERROR_SYSCALL_CALLED);
             }
-            bool const is = Interrupt::disableAll();
-            api::Thread* thread = NULL;
-            int64 id = -1; // TODO: get a current thread ID static_cast<int64>( gettid() );
-            int32 length = threads_.getLength();
-            for(int32 i=0; i<length; i++)
+            bool_t const is = Interrupt::disableAll();
+            api::Thread* thread = NULLPTR;
+            int64_t id = -1; // TODO: get a current thread ID static_cast<int64_t>( gettid() );
+            int32_t length = threads_.getLength();
+            for(int32_t i=0; i<length; i++)
             {
                 thread = threads_.get(i);
-                if(thread == NULL) break;
+                if(thread == NULLPTR) break;
                 if(thread->getId() == id) break;
             }
-            if(thread == NULL)
+            if(thread == NULLPTR)
             {
                 System::terminate(ERROR_RESOURCE_NOT_FOUND);
             }
@@ -116,7 +115,7 @@ namespace local
          *
          * @return true if object has been constructed successfully.
          */
-        bool Scheduler::construct()
+        bool_t Scheduler::construct()
         {
             if( not isConstructed() ) return false;
             if( not globalThread_.isConstructed() ) return false;
@@ -129,11 +128,11 @@ namespace local
          *
          * @return true if thread has been added successfully.
          */
-        bool Scheduler::addThread(SchedulerThread* thread)
+        bool_t Scheduler::addThread(SchedulerThread* thread)
         {
             if( not Self::isConstructed() ) return false;
-            bool const is = Interrupt::disableAll();
-            bool res = threads_.add(thread);
+            bool_t const is = Interrupt::disableAll();
+            bool_t res = threads_.add(thread);
             Interrupt::enableAll(is);
             return res;
         }
@@ -146,7 +145,7 @@ namespace local
         void Scheduler::removeThread(SchedulerThread* thread)
         {
             if( not Self::isConstructed() ) return;
-            bool const is = Interrupt::disableAll();
+            bool_t const is = Interrupt::disableAll();
             threads_.removeElement(thread);
             Interrupt::enableAll(is);
         }

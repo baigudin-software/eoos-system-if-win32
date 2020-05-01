@@ -2,14 +2,13 @@
  * Root class of the operating system class hierarchy.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#include "system.Object.hpp"
+#include "sys.Object.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
         /**
          * Constructor.

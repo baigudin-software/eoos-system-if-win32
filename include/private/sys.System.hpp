@@ -2,28 +2,27 @@
  * The operating system class.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYSTEM_SYSTEM_HPP_
-#define SYSTEM_SYSTEM_HPP_
+#ifndef SYS_SYSTEM_HPP_
+#define SYS_SYSTEM_HPP_
 
-#include "system.Object.hpp"
+#include "sys.Object.hpp"
 #include "api.System.hpp"
-#include "system.Heap.hpp"
-#include "system.GlobalInterrupt.hpp"
-#include "system.Runtime.hpp"
-#include "system.Scheduler.hpp"
+#include "sys.Heap.hpp"
+#include "sys.GlobalInterrupt.hpp"
+#include "sys.Runtime.hpp"
+#include "sys.Scheduler.hpp"
 #include "Error.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
-        class System : public system::Object, public api::System
+        class System : public Object, public api::System
         {
-            typedef system::System Self;
-            typedef system::Object Parent;
+            typedef System Self;
+            typedef ::eoos::sys::Object Parent;
 
         public:
 
@@ -42,14 +41,14 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const;
+            virtual bool_t isConstructed() const;
 
             /**
              * Returns running time of the operating system in nanoseconds.
              *
              * @return time in nanoseconds.
              */
-            virtual int64 getTime() const;
+            virtual int64_t getTime() const;
 
             /**
              * Returns the operating system heap memory.
@@ -82,7 +81,7 @@ namespace local
             /**
              * Creates a new mutex resource.
              *
-             * @return a new mutex resource, or NULL if an error has been occurred.
+             * @return a new mutex resource, or NULLPTR if an error has been occurred.
              */
             virtual api::Mutex* createMutex();
 
@@ -91,18 +90,18 @@ namespace local
              *
              * @param permits - the initial number of permits available.
              * @param isFair  - true if this semaphore will guarantee FIFO granting of permits under contention.
-             * @return a new semaphore resource, or NULL if an error has been occurred.
+             * @return a new semaphore resource, or NULLPTR if an error has been occurred.
              */
-            virtual api::Semaphore* createSemaphore(int32 permits, bool isFair);
+            virtual api::Semaphore* createSemaphore(int32_t permits, bool_t isFair);
 
             /**
              * Creates a new interrupt resource.
              *
              * @param handler - user class which implements an interrupt handler interface.
              * @param source  - available interrupt source number.
-             * @return a new interrupt resource, or NULL if an error has been occurred.
+             * @return a new interrupt resource, or NULLPTR if an error has been occurred.
              */
-            virtual api::Interrupt* createInterrupt(api::Task& handler, int32 source);
+            virtual api::Interrupt* createInterrupt(api::Task& handler, int32_t source);
 
             /**
              * Terminates the operating system execution.
@@ -114,7 +113,7 @@ namespace local
              *
              * @return zero, or error code if the execution has been terminated.
              */
-            int32 execute();
+            int32_t execute();
 
             /**
              * Returns the operating system syscall interface.
@@ -137,23 +136,23 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            bool construct();
+            bool_t construct();
 
             /**
              * Proves a resource.
              *
              * @param a resource.
-             * @return a passed resource, or NULL if the resource has not been approved.
+             * @return a passed resource, or NULLPTR if the resource has not been approved.
              */
             template <class T>
             static T* proveResource(T* res)
             {
-                if(res != NULL)
+                if(res != NULLPTR)
                 {
                     if( not res->isConstructed() )
                     {
                         delete res;
-                        res = NULL;
+                        res = NULLPTR;
                     }
                 }
                 return res;
@@ -182,24 +181,24 @@ namespace local
             /**
              * The operating system heap memory.
              */
-            mutable system::Heap heap_;
+            mutable Heap heap_;
 
             /**
              * The operating system global interrupt controller.
              */
-            mutable system::GlobalInterrupt gi_;
+            mutable GlobalInterrupt gi_;
 
             /**
              * The operating system runtime environment.
              */
-            mutable system::Runtime runtime_;
+            mutable Runtime runtime_;
 
             /**
              * The operating system scheduler.
              */
-            mutable system::Scheduler scheduler_;
+            mutable Scheduler scheduler_;
 
         };
     }
 }
-#endif // SYSTEM_SYSTEM_HPP_
+#endif // SYS_SYSTEM_HPP_

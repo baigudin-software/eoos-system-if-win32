@@ -1,38 +1,37 @@
 /**
- * Hardware global interrupts resource.
+ * Global thread switching controller.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYSTEM_GLOBAL_INTERRUPT_HPP_
-#define SYSTEM_GLOBAL_INTERRUPT_HPP_
+#ifndef SYS_GLOBAL_THREAD_HPP_
+#define SYS_GLOBAL_THREAD_HPP_
 
-#include "system.Object.hpp"
+#include "sys.Object.hpp"
 #include "api.Toggle.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
-        class GlobalInterrupt : public system::Object, public api::Toggle
+        class GlobalThread : public Object, public api::Toggle
         {
-            typedef system::GlobalInterrupt Self;
-            typedef system::Object          Parent;
+            typedef GlobalThread Self;
+            typedef ::eoos::sys::Object Parent;
 
         public:
 
             /**
              * Constructor.
              */
-            GlobalInterrupt() : Parent()
+            GlobalThread() : Parent()
             {
             }
 
             /**
              * Destructor.
              */
-            virtual ~GlobalInterrupt()
+            virtual ~GlobalThread()
             {
             }
 
@@ -41,7 +40,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -51,7 +50,7 @@ namespace local
              *
              * @return global interrupt enable bit value before method was called.
              */
-            virtual bool disable()
+            virtual bool_t disable()
             {
                 return false;
             }
@@ -61,7 +60,7 @@ namespace local
              *
              * @param status returned status by disable method.
              */
-            virtual void enable(bool status)
+            virtual void enable(bool_t status)
             {
             }
 
@@ -72,7 +71,7 @@ namespace local
              *
              * @param obj reference to source object.
              */
-            GlobalInterrupt(const GlobalInterrupt& obj);
+            GlobalThread(const GlobalThread& obj);
 
             /**
              * Assignment operator.
@@ -80,9 +79,9 @@ namespace local
              * @param obj reference to source object.
              * @return reference to this object.
              */
-            GlobalInterrupt& operator =(const GlobalInterrupt& obj);
+            GlobalThread& operator =(const GlobalThread& obj);
 
         };
     }
 }
-#endif // SYSTEM_GLOBAL_INTERRUPT_HPP_
+#endif // SYS_GLOBAL_THREAD_HPP_

@@ -2,14 +2,13 @@
  * The operating system memory allocator.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
  */
-#include "system.Allocator.hpp"
+#include "sys.Allocator.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
         /**
          * Allocates memory.
@@ -19,7 +18,7 @@ namespace local
          */
         void* Allocator::allocate(size_t const size)
         {
-            return NULL;
+            return NULLPTR;
         }
 
         /**

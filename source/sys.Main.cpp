@@ -2,10 +2,9 @@
  * The main entry point.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2018-2020, Sergey Baigudin, Baigudin Software
  */
-#include "system.System.hpp"
+#include "sys.System.hpp"
 
 /**
  * The main function.
@@ -21,17 +20,17 @@
  */
 int main()
 {
-    ::local::int32 error;
+    ::eoos::int32_t error;
     // Execute the EOOS RT operating system
     try
     {
-        ::local::system::System eoos;
+        ::eoos::sys::System eoos;
         error = eoos.execute();
     }
 	// Handle unexpected exceptions following MISRA-C++:2008 Rule 15–3–2 and AUTOSAR C++14 Rule A15-3-2
     catch (...)
     {
-        error = ::local::ERROR_UNDEFINED;
+        error = ::eoos::ERROR_UNDEFINED;
     }
     return static_cast<int>(error);
 }

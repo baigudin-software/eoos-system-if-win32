@@ -2,22 +2,21 @@
  * Root class of the operating system class hierarchy.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYSTEM_OBJECT_HPP_
-#define SYSTEM_OBJECT_HPP_
+#ifndef SYS_OBJECT_HPP_
+#define SYS_OBJECT_HPP_
 
 #include "Object.hpp"
-#include "system.Allocator.hpp"
+#include "sys.Allocator.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace system
+    namespace sys
     {
-        class Object : public ::local::Object<Allocator>
+        class Object : public ::eoos::Object<Allocator>
         {
-            typedef ::local::Object<Allocator> Parent;
+            typedef ::eoos::Object<Allocator> Parent;
 
         public:
 
@@ -34,4 +33,4 @@ namespace local
         };
     }
 }
-#endif // SYSTEM_OBJECT_HPP_
+#endif // SYS_OBJECT_HPP_
