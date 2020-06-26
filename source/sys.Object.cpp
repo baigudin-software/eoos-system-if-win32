@@ -10,19 +10,12 @@ namespace eoos
 {
     namespace sys
     {
-        /**
-         * Constructor.
-         */
         Object::Object() : Parent()
         {
         }
 
-        /**
-         * Destructor.
-         */
         Object::~Object()
         {
         }
-
     }
 }

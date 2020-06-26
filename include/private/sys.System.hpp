@@ -104,7 +104,7 @@ namespace eoos
             virtual api::Interrupt* createInterrupt(api::Task& handler, int32_t source);
 
             /**
-             * Terminates the operating system execution.
+             * Terminates the system execution.
              */
             virtual void terminate() const;
 
@@ -123,11 +123,11 @@ namespace eoos
             static api::System& call();
 
             /**
-             * Terminates the operating system execution.
+             * Terminates the system execution.
              *
-             * @param error a termination status code.
+             * @param error an exit code.
              */
-            static void terminate(Error error);
+            static void exit(Error error);
 
         private:
 

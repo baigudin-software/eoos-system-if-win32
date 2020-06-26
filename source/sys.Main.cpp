@@ -18,19 +18,14 @@
  *
  * @return error code or zero.
  */
-int main()
+int main() try
 {
-    ::eoos::int32_t error;
-    // Execute the EOOS RT operating system
-    try
-    {
-        ::eoos::sys::System eoos;
-        error = eoos.execute();
-    }
-	// Handle unexpected exceptions following MISRA-C++:2008 Rule 15–3–2 and AUTOSAR C++14 Rule A15-3-2
-    catch (...)
-    {
-        error = ::eoos::ERROR_UNDEFINED;
-    }
+    ::eoos::sys::System eoos;
+    ::eoos::int32_t const error = eoos.execute();
     return static_cast<int>(error);
+} 
+catch (...) 
+{
+    // Handle unexpected exceptions following MISRA-C++:2008 Rule 15–3–2 and AUTOSAR C++14 Rule A15-3-2
+    return ::eoos::ERROR_UNDEFINED;
 }

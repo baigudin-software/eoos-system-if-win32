@@ -13,38 +13,21 @@ namespace eoos
 {
     namespace sys
     {
-        /**
-         * Constructor.
-         */
         Scheduler::Scheduler() : Parent(),
             globalThread_  (),
             threads_       (NULLPTR){
             setConstructed( construct() );
         }
 
-        /**
-         * Destructor.
-         */
         Scheduler::~Scheduler()
         {
         }
 
-        /**
-         * Tests if this object has been constructed.
-         *
-         * @return true if object has been constructed successfully.
-         */
         bool_t Scheduler::isConstructed() const
         {
             return Parent::isConstructed();
         }
 
-        /**
-         * Creates a new thread.
-         *
-         * @param task an user task which main method will be invoked when created thread is started.
-         * @return a new thread.
-         */
         api::Thread* Scheduler::createThread(api::Task& task)
         {
             if( not Self::isConstructed() ) return NULLPTR;
@@ -55,16 +38,11 @@ namespace eoos
             return NULLPTR;
         }
 
-        /**
-         * Returns currently executing thread.
-         *
-         * @return executing thread.
-         */
         api::Thread& Scheduler::getCurrentThread() const
         {
             if( not Self::isConstructed() )
             {
-                System::terminate(ERROR_SYSCALL_CALLED);
+                System::exit(ERROR_SYSCALL_CALLED);
             }
             bool_t const is = Interrupt::disableAll();
             api::Thread* thread = NULLPTR;
@@ -78,43 +56,26 @@ namespace eoos
             }
             if(thread == NULLPTR)
             {
-                System::terminate(ERROR_RESOURCE_NOT_FOUND);
+                System::exit(ERROR_RESOURCE_NOT_FOUND);
             }
             Interrupt::enableAll(is);
             return *thread;
         }
 
-        /**
-         * Yields to next thread.
-         */
         void Scheduler::yield()
         {
             if( not Self::isConstructed() )
             {
-                System::terminate(ERROR_SYSCALL_CALLED);
+                System::exit(ERROR_SYSCALL_CALLED);
             }
             // TODO: sched_yield();
         }
 
-        /**
-         * Returns the toggle interface for controlling global thread switching.
-         *
-         * @return toggle interface.
-         */
         api::Toggle& Scheduler::toggle()
         {
             return globalThread_;
         }
 
-        /**
-         * Constructor.
-         *
-         * When first scheduler timer interrupt is occurred,
-         * default registers of parent interrupt class will be used
-         * for storing the operating system context to it.
-         *
-         * @return true if object has been constructed successfully.
-         */
         bool_t Scheduler::construct()
         {
             if( not isConstructed() ) return false;
@@ -123,11 +84,6 @@ namespace eoos
             return true;
         }
 
-        /**
-         * Adds a thread to execution list
-         *
-         * @return true if thread has been added successfully.
-         */
         bool_t Scheduler::addThread(SchedulerThread* thread)
         {
             if( not Self::isConstructed() ) return false;
@@ -137,11 +93,6 @@ namespace eoos
             return res;
         }
 
-        /**
-         * Removes the first occurrence of the specified thread.
-         *
-         * @param thread removing thread.
-         */
         void Scheduler::removeThread(SchedulerThread* thread)
         {
             if( not Self::isConstructed() ) return;
