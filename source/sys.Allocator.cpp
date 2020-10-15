@@ -12,11 +12,12 @@ namespace eoos
     {
         void* Allocator::allocate(size_t const size)
         {
-            return NULLPTR;
+            return new cell_t[size];
         }
 
         void Allocator::free(void* const ptr)
         {
+            delete[] ptr;
         }
     }
 }
