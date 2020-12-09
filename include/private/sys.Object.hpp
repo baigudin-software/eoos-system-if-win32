@@ -1,5 +1,5 @@
 /**
- * Root class of the operating system class hierarchy.
+ * @brief Root class of the operating system class hierarchy.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
@@ -8,29 +8,30 @@
 #define SYS_OBJECT_HPP_
 
 #include "Object.hpp"
-#include "sys.Allocator.hpp"
 
 namespace eoos
 {
-    namespace sys
-    {
-        class Object : public ::eoos::Object<Allocator>
-        {
-            typedef ::eoos::Object<Allocator> Parent;
+namespace sys
+{
 
-        public:
+class Object : public ::eoos::Object<Allocator>
+{
+    typedef ::eoos::Object<Allocator> Parent;
 
-            /**
-             * Constructor.
-             */
-            Object();
+public:
 
-            /**
-             * Destructor.
-             */
-            virtual ~Object();
+    /**
+     * @brief Constructor.
+     */
+    Object();
 
-        };
-    }
-}
+    /**
+     * @brief Destructor.
+     */
+    virtual ~Object();
+
+};
+
+} // namespace sys
+} // namespace eoos
 #endif // SYS_OBJECT_HPP_

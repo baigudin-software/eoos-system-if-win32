@@ -1,5 +1,5 @@
 /**
- * Runtime system execution.
+ * @brief Runtime system execution.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
@@ -13,83 +13,85 @@
 
 namespace eoos
 {
-    namespace sys
+namespace sys
+{
+
+class Runtime : public Object, public api::Runtime
+{
+    typedef Runtime Self;
+    typedef ::eoos::sys::Object Parent;
+
+public:
+
+    /**
+     * @brief Constructor.
+     */
+    Runtime() : Parent()
     {
-        class Runtime : public Object, public api::Runtime
-        {
-            typedef Runtime Self;
-            typedef ::eoos::sys::Object Parent;
-
-        public:
-
-            /**
-             * Constructor.
-             */
-            Runtime() : Parent()
-            {
-            }
-
-            /**
-             * Destructor.
-             */
-            virtual ~Runtime()
-            {
-            }
-
-            /**
-             * Tests if this object has been constructed.
-             *
-             * @return true if object has been constructed successfully.
-             */
-            virtual bool_t isConstructed() const
-            {
-                return Parent::isConstructed();
-            }
-
-            /**
-             * Loads a program for executing.
-             *
-             * @param path a system path to a program.
-             * @return true if program has been loaded successfully.
-             */
-            virtual bool_t load(const char_t* path)
-            {
-                if( not Self::isConstructed() ) return false;
-                return false;
-            }
-
-            /**
-             * Terminates a system execution.
-             *
-             * @param status a termination status.
-             */
-            virtual void exit(int32_t const status)
-            {
-                // ... TODO ...
-                bool_t const is = Interrupt::disableAll();
-                volatile bool_t const isTerminate = true;
-                while( isTerminate ){};
-                Interrupt::enableAll(is);
-            }
-
-        private:
-
-            /**
-             * Copy constructor.
-             *
-             * @param obj reference to source object.
-             */
-            Runtime(const Runtime& obj);
-
-            /**
-             * Assignment operator.
-             *
-             * @param obj reference to source object.
-             * @return reference to this object.
-             */
-            Runtime& operator =(const Runtime& obj);
-
-        };
     }
-}
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~Runtime()
+    {
+    }
+
+    /**
+     * @brief Tests if this object has been constructed.
+     *
+     * @return true if object has been constructed successfully.
+     */
+    virtual bool_t isConstructed() const
+    {
+        return Parent::isConstructed();
+    }
+
+    /**
+     * @brief Loads a program for executing.
+     *
+     * @param path a system path to a program.
+     * @return true if program has been loaded successfully.
+     */
+    virtual bool_t load(const char_t* path)
+    {
+        if( not Self::isConstructed() ) return false;
+        return false;
+    }
+
+    /**
+     * @brief Terminates a system execution.
+     *
+     * @param status a termination status.
+     */
+    virtual void exit(int32_t const status)
+    {
+        // ... TODO ...
+        bool_t const is = Interrupt::disableAll();
+        volatile bool_t const isTerminate = true;
+        while( isTerminate ){};
+        Interrupt::enableAll(is);
+    }
+
+private:
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param obj reference to source object.
+     */
+    Runtime(const Runtime& obj);
+
+    /**
+     * @brief Assignment operator.
+     *
+     * @param obj reference to source object.
+     * @return reference to this object.
+     */
+    Runtime& operator =(const Runtime& obj);
+
+};
+
+} // namespace sys
+} // namespace eoos
 #endif // SYS_RUNTIME_HPP_

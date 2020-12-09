@@ -1,5 +1,5 @@
 /**
- * The main entry point.
+ * @brief The main entry point.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2018-2020, Sergey Baigudin, Baigudin Software
@@ -7,7 +7,7 @@
 #include "sys.System.hpp"
 
 /**
- * The main function.
+ * @brief The main function.
  *
  * The following tasks must be done before the function called:
  * 1. Stack has been set.

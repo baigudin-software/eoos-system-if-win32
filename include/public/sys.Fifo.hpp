@@ -1,5 +1,5 @@
 /**
- * Class implements FIFO files.
+ * @brief Class implements FIFO files.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2020, Sergey Baigudin, Baigudin Software
@@ -21,16 +21,17 @@
 
 namespace eoos
 {
-    namespace sys
-    {
-        #ifdef EOOS_WIN32
-        using Fifo = win32::Fifo;
-        #elif EOOS_POSIX
-        using Fifo = posix::Fifo;
-        #else
-        #error "FIFO is not implemented for OS is used"    
-        #endif        
-        
-    }
-}
+namespace sys
+{
+
+#ifdef EOOS_WIN32
+using Fifo = win32::Fifo;
+#elif EOOS_POSIX
+using Fifo = posix::Fifo;
+#else
+#error "FIFO is not implemented for OS is used"    
+#endif        
+    
+} // namespace sys
+} // namespace eoos
 #endif // SYS_FIFO_HPP_
