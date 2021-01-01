@@ -1,14 +1,11 @@
-# Internal files
-.svn
-projects/*/*.lib
-zos/devices
-projects/*/resources/wks/
-
 # Compiled Object files
 *.o
 *.obj
 *.lst
 *.map
+
+# VSCode project files
+.vscode
 
 # CCStudio project files
 *.wks
@@ -17,9 +14,6 @@ projects/*/resources/wks/
 *.log
 *.lkf
 *.CS_
-DebugSios
-DebugBpo
-DebugTpo
 Debug
 Release
 

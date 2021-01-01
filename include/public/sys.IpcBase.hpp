@@ -46,29 +46,29 @@ public:
     /**        
      * @brief Copy constructor.
      */
-    IpcBase(const IpcBase&) = delete;
+    IpcBase(const IpcBase&) noexcept = delete;
 
     /**        
      * @brief Move constructor.
      */
-    IpcBase(IpcBase&&) = delete;
+    IpcBase(IpcBase&&) noexcept = delete;
 
     /**        
      * @brief Copy assignment operator.
      */
-    IpcBase& operator=(const IpcBase&) = delete;
+    IpcBase& operator=(const IpcBase&) noexcept = delete;
 
     /**        
      * @brief Move assignment operator.
      */             
-    IpcBase& operator=(IpcBase&&) = delete;
+    IpcBase& operator=(IpcBase&&) noexcept = delete;
     
     /**
      * @brief Tests if this object has been constructed.
      *
      * @return true if object has been constructed successfully.
      */
-    bool_t isConstructed() const override
+    bool_t isConstructed() noexcept const override
     {
         return Parent::isConstructed();
     }            
