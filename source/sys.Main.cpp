@@ -2,7 +2,7 @@
  * @brief The main entry point.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2018-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2018-2021, Sergey Baigudin, Baigudin Software
  */
 #include "sys.System.hpp"
 
@@ -17,6 +17,8 @@
  * 5. Global constructors have been called.
  *
  * @return error code or zero.
+ *
+ * @todo Add the arguments to the function.
  */
 int main() try
 {
@@ -27,5 +29,5 @@ int main() try
 catch (...) 
 {
     // Handle unexpected exceptions following MISRA-C++:2008 Rule 15–3–2 and AUTOSAR C++14 Rule A15-3-2
-    return ::eoos::ERROR_UNDEFINED;
+    return ::eoos::sys::ERROR_UNDEFINED;
 }

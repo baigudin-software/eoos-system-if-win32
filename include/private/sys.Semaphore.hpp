@@ -1,25 +1,27 @@
 /**
- * @brief Semaphore class.
+ * @brief Semaphore.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_SEMAPHORE_HPP_
 #define SYS_SEMAPHORE_HPP_
 
-#include "sys.Object.hpp"
-#include "api.Semaphore.hpp"
-#include "sys.Interrupt.hpp"
+#include "sys.NonCopyable.hpp"
+#include "api.SysSemaphore.hpp"
 
 namespace eoos
 {
 namespace sys
 {
 
-class Semaphore : public Object, public api::Semaphore
+/**
+ * @brief Semaphore class.
+ */
+class Semaphore : public NonCopyable, public api::Semaphore
 {
-    typedef Semaphore Self;
-    typedef ::eoos::sys::Object Parent;
+    using Self = Semaphore;
+    using Parent = NonCopyable;
 
 public:
 
@@ -37,7 +39,7 @@ public:
     /**
      * @brief Destructor.
      */
-    virtual ~Semaphore()
+    ~Semaphore() override
     {
     }
 
@@ -46,7 +48,7 @@ public:
      *
      * @return true if object has been constructed successfully.
      */
-    virtual bool_t isConstructed() const
+    bool_t isConstructed() const override
     {
         return Parent::isConstructed();
     }
@@ -56,7 +58,7 @@ public:
      *
      * @return true if the semaphore is acquired successfully.
      */
-    virtual bool_t acquire()
+    bool_t acquire() override
     {
         if( not Self::isConstructed() ) return false;
         return false;
@@ -65,10 +67,10 @@ public:
     /**
      * @brief Acquires the given number of permits from this semaphore.
      *
-     * @param permits the number of permits to acquire.
+     * @param permits The number of permits to acquire.
      * @return true if the semaphore is acquired successfully.
      */
-    virtual bool_t acquire(int32_t permits)
+    bool_t acquire(int32_t permits) override
     {
         if( not Self::isConstructed() ) return false;
         return false;
@@ -77,7 +79,7 @@ public:
     /**
      * @brief Releases one permit.
      */
-    virtual void release()
+    void release() override
     {
         if( not Self::isConstructed() ) return;
     }
@@ -85,9 +87,9 @@ public:
     /**
      * @brief Releases the given number of permits.
      *
-     * @param permits the number of permits to release.
+     * @param permits The number of permits to release.
      */
-    virtual void release(int32_t permits)
+    void release(int32_t permits) override
     {
         if( not Self::isConstructed() ) return;
     }
@@ -97,19 +99,8 @@ public:
      *
      * @return true if this semaphore has fairness set true.
      */
-    virtual bool_t isFair() const
+    bool_t isFair() const override
     {
-        return false;
-    }
-
-    /**
-     * @brief Tests if this resource is blocked.
-     *
-     * @return true if this resource is blocked.
-     */
-    virtual bool_t isBlocked() const
-    {
-        if( not Self::isConstructed() ) return false;
         return false;
     }
 
@@ -118,7 +109,7 @@ private:
     /**
      * @brief Constructor.
      *
-     * @param permits the initial number of permits available.
+     * @param permits The initial number of permits available.
      * @return true if object has been constructed successfully.
      */
     bool_t construct(int32_t permits)
@@ -126,21 +117,6 @@ private:
         if( not Self::isConstructed() ) return false;
         return true;
     }
-
-    /**
-     * @brief Copy constructor.
-     *
-     * @param obj reference to source object.
-     */
-    Semaphore(const Semaphore& obj);
-
-    /**
-     * @brief Assignment operator.
-     *
-     * @param obj reference to source object.
-     * @return reference to this object.
-     */
-    Semaphore& operator =(const Semaphore& obj);
 
 };
         

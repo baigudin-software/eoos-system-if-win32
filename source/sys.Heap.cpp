@@ -2,7 +2,7 @@
  * @brief The operating system heap memory.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2018-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2018-2021, Sergey Baigudin, Baigudin Software
  */
 #include "sys.Heap.hpp"
 

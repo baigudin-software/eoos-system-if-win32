@@ -2,12 +2,12 @@
  * @brief The operating system heap memory.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2018-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2018-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_HEAP_HPP_
 #define SYS_HEAP_HPP_
 
-#include "sys.Object.hpp"
+#include "sys.NonCopyable.hpp"
 #include "api.Heap.hpp"
 
 namespace eoos
@@ -15,10 +15,13 @@ namespace eoos
 namespace sys
 {
 
-class Heap : public Object, public api::Heap
+/**
+ * @brief The operating system heap memory class.
+ */
+class Heap : public NonCopyable, public api::Heap
 {
-    typedef Heap Self;
-    typedef sys::Object Parent;
+    using Self = Heap;
+    using Parent = NonCopyable;
 
 public:
 
@@ -30,32 +33,32 @@ public:
     /**
      * @brief Destructor.
      */
-    virtual ~Heap();
+    ~Heap() override;
 
     /**
      * @brief Tests if this object has been constructed.
      *
      * @return true if object has been constructed successfully.
      */
-    virtual bool_t isConstructed() const;
+    bool_t isConstructed() const override;
 
     /**
      * @brief Allocates memory.
      *
-     * @param size - required memory size in byte.
-     * @param ptr  - NULLPTR value becomes to allocate memory, and
-     *               other given values are simply returned
-     *               as memory address.
+     * @param size Required memory size in byte.
+     * @param ptr  NULLPTR value becomes to allocate memory, and
+     *             other given values are simply returned
+     *             as memory address.
      * @return pointer to allocated memory or NULLPTR.
      */
-    virtual void* allocate(size_t size, void* ptr);
+    void* allocate(size_t size, void* ptr) override;
 
     /**
      * @brief Frees an allocated memory.
      *
-     * @param ptr - pointer to allocated memory.
+     * @param ptr Pointer to allocated memory.
      */
-    virtual void free(void* ptr);
+    void free(void* ptr) override;
 
 };
 

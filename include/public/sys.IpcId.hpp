@@ -5,8 +5,8 @@
  * @copyright 2020, Sergey Baigudin, Baigudin Software
  */
 
-#ifndef SYS_IPC_ID_H_
-#define SYS_IPC_ID_H_
+#ifndef SYS_IPC_ID_HPP_
+#define SYS_IPC_ID_HPP_
 
 #include "Types.hpp"
 
@@ -86,4 +86,4 @@ private:
 
 } // namespace sys
 } // namespace eoos
-#endif // SYS_IPC_ID_H_
+#endif // SYS_IPC_ID_HPP_

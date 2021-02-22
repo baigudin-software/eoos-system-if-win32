@@ -2,24 +2,26 @@
  * @brief Runtime system execution.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_RUNTIME_HPP_
 #define SYS_RUNTIME_HPP_
 
-#include "sys.Object.hpp"
+#include "sys.NonCopyable.hpp"
 #include "api.Runtime.hpp"
-#include "sys.Interrupt.hpp"
 
 namespace eoos
 {
 namespace sys
 {
 
-class Runtime : public Object, public api::Runtime
+/**
+ * @brief Runtime system execution class.
+ */
+class Runtime : public NonCopyable, public api::Runtime
 {
-    typedef Runtime Self;
-    typedef ::eoos::sys::Object Parent;
+    using Self = Runtime;
+    using Parent = NonCopyable;
 
 public:
 
@@ -33,7 +35,7 @@ public:
     /**
      * @brief Destructor.
      */
-    virtual ~Runtime()
+    ~Runtime() override
     {
     }
 
@@ -42,7 +44,7 @@ public:
      *
      * @return true if object has been constructed successfully.
      */
-    virtual bool_t isConstructed() const
+    bool_t isConstructed() const override
     {
         return Parent::isConstructed();
     }
@@ -50,10 +52,10 @@ public:
     /**
      * @brief Loads a program for executing.
      *
-     * @param path a system path to a program.
+     * @param path A system path to a program.
      * @return true if program has been loaded successfully.
      */
-    virtual bool_t load(const char_t* path)
+    bool_t load(const char_t* const path) override
     {
         if( not Self::isConstructed() ) return false;
         return false;
@@ -62,33 +64,14 @@ public:
     /**
      * @brief Terminates a system execution.
      *
-     * @param status a termination status.
+     * @param status A termination status.
      */
-    virtual void exit(int32_t const status)
+    void exit(int32_t const status) override
     {
-        // ... TODO ...
-        bool_t const is = Interrupt::disableAll();
+        // @todo 
         volatile bool_t const isTerminate = true;
         while( isTerminate ){};
-        Interrupt::enableAll(is);
     }
-
-private:
-
-    /**
-     * @brief Copy constructor.
-     *
-     * @param obj reference to source object.
-     */
-    Runtime(const Runtime& obj);
-
-    /**
-     * @brief Assignment operator.
-     *
-     * @param obj reference to source object.
-     * @return reference to this object.
-     */
-    Runtime& operator =(const Runtime& obj);
 
 };
 

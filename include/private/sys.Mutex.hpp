@@ -1,31 +1,36 @@
 /**
- * @brief Mutex class.
+ * @brief Mutex.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_MUTEX_HPP_
 #define SYS_MUTEX_HPP_
 
-#include "sys.Object.hpp"
-#include "api.Mutex.hpp"
+#include "sys.NonCopyable.hpp"
+#include "api.SysMutex.hpp"
+
+#include <Windows.h>
 
 namespace eoos
 {
 namespace sys
 {
 
-class Mutex : public Object, public api::Mutex
+/**
+ * @brief Mutex class.
+ */
+class Mutex : public NonCopyable, public api::Mutex
 {
-    typedef Mutex Self;
-    typedef ::eoos::sys::Object Parent;
+    using Self = Mutex;
+    using Parent = NonCopyable;
 
 public:
 
     /**
      * @brief Constructor.
      */
-    Mutex() : Parent()
+    Mutex() noexcept : Parent()
     {
         bool_t const isConstructed = construct();
         setConstructed( isConstructed );
@@ -34,8 +39,9 @@ public:
     /**
      * @brief Destructor.
      */
-    virtual ~Mutex()
+    ~Mutex() noexcept override
     {
+        ::DeleteCriticalSection(pcs_);
     }
 
     /**
@@ -43,40 +49,57 @@ public:
      *
      * @return true if object has been constructed successfully.
      */
-    virtual bool_t isConstructed() const
+    bool_t isConstructed() const noexcept override 
     {
         return Parent::isConstructed();
     }
-
+    
+    /**
+     * @brief Tries to locks this mutex.
+     *
+     * @return true if this mutex is locked successfully, or false if other thread locked on this mutex.
+     */
+    bool_t tryLock() noexcept override try
+    {
+        bool_t res {false};
+        if( Self::isConstructed() )
+        {
+            res = ::TryEnterCriticalSection(pcs_) != 0;
+        }
+        return res;
+    } catch (...) {
+        return false;
+    }    
 
     /**
      * @brief Locks the mutex.
      *
      * @return true if the mutex is lock successfully.
      */
-    virtual bool_t lock()
+    bool_t lock() noexcept override try
     {
-        if( not Self::isConstructed() ) return false;
+        bool_t res {false};
+        if( not Self::isConstructed() )
+        {
+            ::EnterCriticalSection(pcs_);
+            res = true;
+        }
+        return res;
+    } catch (...) {
         return false;
     }
 
     /**
      * @brief Unlocks the mutex.
      */
-    virtual void unlock()
+    void unlock() noexcept override try
     {
-        if( not Self::isConstructed() ) return;
-    }
-
-    /**
-     * @brief Tests if this resource is blocked.
-     *
-     * @return true if this resource is blocked.
-     */
-    virtual bool_t isBlocked()const
-    {
-        if( not Self::isConstructed() ) return false;
-        return false;
+        if( not Self::isConstructed() )
+        {
+            ::LeaveCriticalSection(pcs_);
+        }
+    } catch (...) {
+        return;
     }
 
 private:
@@ -86,26 +109,37 @@ private:
      *
      * @return true if object has been constructed successfully.
      */
-    bool_t construct()
+    bool_t construct() noexcept try
     {
-        if( not Self::isConstructed() ) return false;
-        return true;
+        bool_t res = false;
+        do
+        {   
+            if( not Self::isConstructed() )
+            {
+                break;
+            }
+            ::DWORD const spinCount = 4000;
+            ::BOOL const isInitialize = ::InitializeCriticalSectionAndSpinCount(pcs_, spinCount);
+            if(isInitialize == 0)
+            {
+                break;
+            }
+            res = true;
+        } while(false);
+        return res;
+    } catch (...) {
+        return false;
     }
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj reference to source object.
-     */
-    Mutex(const Mutex& obj);
+     * @brief Windows critical section object.
+     */    
+	::CRITICAL_SECTION cs_;    
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj reference to source object.
-     * @return reference to this object.
-     */
-    Mutex& operator =(const Mutex& obj);
+     * @brief Pointer to Windows critical section object.
+     */    
+	::LPCRITICAL_SECTION const pcs_ {&cs_};    
 
 };
 

@@ -1,15 +1,15 @@
 /**
- * @brief The operating system class.
+ * @brief The operating system.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
 #include "sys.System.hpp"
-#include "windows.h"
 #include "sys.Mutex.hpp"
 #include "sys.Semaphore.hpp"
-#include "sys.Interrupt.hpp"
 #include "Program.hpp"
+
+#include <windows.h>
 
 namespace eoos
 {
@@ -18,16 +18,8 @@ namespace sys
         
 api::System* System::system_ = NULLPTR;
 
-api::System& syscall()
+System::System() : Parent()
 {
-    return System::call();
-}
-
-System::System() : Parent(),
-    heap_      (),
-    gi_        (),
-    runtime_   (),
-    scheduler_ (){
     bool_t const isConstructed = construct();
     setConstructed( isConstructed );
 }
@@ -65,15 +57,6 @@ api::Runtime& System::getRuntime() const
     return runtime_;
 }
 
-api::Toggle& System::getGlobalInterrupt() const
-{
-    if( not Self::isConstructed() )
-    {
-        exit(ERROR_SYSCALL_CALLED);
-    }
-    return gi_;
-}
-
 api::Scheduler& System::getScheduler() const
 {
     if( not Self::isConstructed() )
@@ -85,19 +68,13 @@ api::Scheduler& System::getScheduler() const
 
 api::Mutex* System::createMutex()
 {
-    api::Mutex* res = new Mutex();
+    api::Mutex* const res = new Mutex();
     return proveResource(res);
 }
 
 api::Semaphore* System::createSemaphore(int32_t permits, bool_t isFair)
 {
-    api::Semaphore* res = new Semaphore(permits);
-    return proveResource(res);
-}
-
-api::Interrupt* System::createInterrupt(api::Task& handler, int32_t source)
-{
-    api::Interrupt* res = new Interrupt(handler, source);
+    api::Semaphore* const res = new Semaphore(permits);
     return proveResource(res);
 }
 
@@ -122,7 +99,7 @@ int32_t System::execute()
 
 api::System& System::call()
 {
-    if(system_ == NULLPTR)
+    if( system_ == NULLPTR )
     {
         exit(ERROR_SYSCALL_CALLED);
     }
@@ -131,13 +108,11 @@ api::System& System::call()
 
 void System::exit(Error const error)
 {
-    bool_t const is = Interrupt::disableAll();
     ExitProcess(error);
     // This code must NOT be executed
-    // TODO: throw an exection here is better.
+    // @todo throw an exection here is better.
     volatile bool_t const isTerminated = true;
     while( isTerminated ){};
-    Interrupt::enableAll(is);
 }
 
 bool_t System::construct()
@@ -151,11 +126,6 @@ bool_t System::construct()
             continue;
         }
         if( not heap_.isConstructed() )
-        {
-            res = false;
-            continue;
-        }
-        if( not gi_.isConstructed() )
         {
             res = false;
             continue;
