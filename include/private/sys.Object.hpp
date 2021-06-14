@@ -1,6 +1,5 @@
 /**
- * @brief Root class of the operating system class hierarchy.
- *
+ * @file      sys.Object.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
@@ -8,7 +7,7 @@
 #define SYS_OBJECT_HPP_
 
 #include "Object.hpp"
-#include "lib.Types.hpp"
+#include "sys.Types.hpp"
 
 namespace eoos
 {
@@ -16,7 +15,8 @@ namespace sys
 {
 
 /**
- * @brief Root class of the operating system.
+ * @class Object
+ * @brief Root class of the operating system class hierarchy.
  */
 class Object : public ::eoos::Object<Allocator>
 {
@@ -35,17 +35,12 @@ public:
     ~Object() noexcept override {}
     
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj - reference to a source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Object(const Object& obj) noexcept : Parent(obj) {} 
     
     /**
-     * @brief Copy assignment operator.
-     *
-     * @param obj - reference to a source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */       
     Object& operator=(const Object& obj) noexcept
     {
@@ -54,17 +49,12 @@ public:
     }    
 
     /**
-     * @brief Move constructor.
-     *
-     * @param obj - right reference to a source object.     
+     * @copydoc eoos::Object::Object(const Object&&)
      */       
     Object(Object&& obj) noexcept : Parent( lib::move(obj) ) {}
     
     /**
-     * @brief Move assignment operator.
-     *
-     * @param obj - right reference to a source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&&)
      */
     Object& operator=(Object&& obj) noexcept
     {

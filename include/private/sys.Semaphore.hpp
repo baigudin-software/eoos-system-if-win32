@@ -1,6 +1,5 @@
 /**
- * @brief Semaphore.
- *
+ * @file      sys.Semaphore.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
  */
@@ -16,6 +15,7 @@ namespace sys
 {
 
 /**
+ * @class Semaphore
  * @brief Semaphore class.
  */
 class Semaphore : public NonCopyable, public api::Semaphore
@@ -28,7 +28,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param permits the initial number of permits available.
+     * @param permits The initial number of permits available.
      */
     Semaphore(int32_t permits) : Parent()
     {
@@ -44,9 +44,7 @@ public:
     }
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     bool_t isConstructed() const override
     {
@@ -54,9 +52,7 @@ public:
     }
 
     /**
-     * @brief Acquires one permit from this semaphore.
-     *
-     * @return true if the semaphore is acquired successfully.
+     * @copydoc eoos::api::Semaphore::acquire()
      */
     bool_t acquire() override
     {
@@ -65,10 +61,7 @@ public:
     }
 
     /**
-     * @brief Acquires the given number of permits from this semaphore.
-     *
-     * @param permits The number of permits to acquire.
-     * @return true if the semaphore is acquired successfully.
+     * @copydoc eoos::api::Semaphore::acquire(int32_t)
      */
     bool_t acquire(int32_t permits) override
     {
@@ -77,7 +70,7 @@ public:
     }
 
     /**
-     * @brief Releases one permit.
+     * @copydoc eoos::api::Semaphore::release()
      */
     void release() override
     {
@@ -85,9 +78,7 @@ public:
     }
 
     /**
-     * @brief Releases the given number of permits.
-     *
-     * @param permits The number of permits to release.
+     * @copydoc eoos::api::Semaphore::release(int32_t)
      */
     void release(int32_t permits) override
     {
@@ -95,9 +86,7 @@ public:
     }
 
     /**
-     * @brief Tests if this semaphore is fair.
-     *
-     * @return true if this semaphore has fairness set true.
+     * @copydoc eoos::api::Semaphore::isFair()
      */
     bool_t isFair() const override
     {

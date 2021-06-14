@@ -1,6 +1,5 @@
 /**
- * @brief Thread.
- *
+ * @file      sys.Thread.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
@@ -11,14 +10,13 @@
 #include "api.Thread.hpp"
 #include "api.Task.hpp"
 
-#include <Windows.h>
-
 namespace eoos
 {
 namespace sys
 {
 
 /**
+ * @class Thread
  * @brief Thread class.
  */
 class Thread : public NonCopyable, public api::Thread
@@ -34,11 +32,13 @@ public:
      * @param task      A task interface whose main method is invoked when this thread is started.
      * @param scheduler A scheduler controls this thread.
      */
-    Thread(api::Task& task, Scheduler* const scheduler) : Parent(),
+    Thread(api::Task& task, Scheduler* const scheduler) try : Parent(),
         task_          (&task),
         scheduler_     (scheduler){
         bool_t const isConstructed  { construct() };
         setConstructed( isConstructed );
+    } catch (...) {
+        setConstructed(false);
     }
 
     /**
@@ -46,47 +46,49 @@ public:
      */
     ~Thread() override
     {
-        if(handle_ != NULL)
+        if(handle_ != NULLPTR)
         {
             ::CloseHandle(handle_);
+            handle_ = NULLPTR;
+            status_ = STATUS_DEAD;
         }
-    }
+    }   
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const noexcept override
+    bool_t isConstructed() const override
     {
         return Parent::isConstructed();
     }
 
     /**
-     * @brief Causes this thread to begin execution.
+     * @copydoc eoos::api::Thread::execute()
      */
-    void execute() noexcept override try
+    void execute() override try
     {
-        if( Self::isConstructed() && status_ == NEW)
+        if( Self::isConstructed() && status_ == STATUS_NEW)
         {
-            ::DWORD const exitCode = ResumeThread(handle_);
-            if(exitCode != -1)
+            ::DWORD const exitCode = ::ResumeThread(handle_);
+            // If the exitCode is 1, the specified thread was suspended but was restarted.
+            if(exitCode == 1)
             {
-                status_ = RUNNABLE;
+                status_ = STATUS_RUNNABLE;
             }
             else
             {
-                status_ = DEAD;
+                status_ = STATUS_DEAD;
             }
         }
     } catch (...) {
-        status_ = DEAD;
+        status_ = STATUS_DEAD;
         return;
-    }    
+    }
+    
     /**
-     * @brief Waits for this thread to die.
+     * @copydoc eoos::api::Thread::join()
      */
-    void join() noexcept override try
+    void join() override try
     {
 	    if( Self::isConstructed() )
         {
@@ -97,50 +99,60 @@ public:
     }
 
     /**
-     * @brief Returns the identifier of this thread.
-     *
-     * @return the thread identifier, or -1 if an error has been occurred.
+     * @copydoc eoos::api::Thread::getId()
      */
-    int64_t getId() const noexcept override
+    int64_t getId() const override
     {
-        return Self::isConstructed() ? static_cast<int64_t>(id_) : WRONG_ID;
-    }
-
-    /**
-     * @brief Returns this thread priority.
-     *
-     * @return priority value, or -1 if an error has been occurred.
-     */
-    int32_t getPriority() const noexcept override
-    {
-        return NORM_PRIORITY;
-    }
-
-    /**
-     * @brief Sets this thread priority.
-     *
-     * @param priority number of priority in range [MIN_PRIORITY, MAX_PRIORITY], or LOCK_PRIORITY.
-     */
-    void setPriority(int32_t priority) noexcept override
-    {
-    }
-
-    /**
-     * @brief Returns a status of this thread.
-     *
-     * @return this thread status.
-     */
-    Status getStatus() const noexcept override
-    {
-        return Self::isConstructed() ? status_ : DEAD;
+        return Self::isConstructed() ? static_cast<int64_t>(id_) : ID_WRONG;
     }
     
     /**
-     * @brief Returns an error of this thread task execution.
-     *
-     * @return an execution error.
+     * @copydoc eoos::api::Thread::getStatus()
      */
-    int32_t getExecutionError() const noexcept override
+    Status getStatus() const override
+    {
+        return status_;
+    }    
+
+    /**
+     * @copydoc eoos::api::Thread::getPriority()
+     */
+    int32_t getPriority() const override
+    {
+        return Self::isConstructed() ? priority_ : PRIORITY_WRONG;        
+    }
+
+    /**
+     * @copydoc eoos::api::Thread::setPriority(int32_t)
+     */
+    bool_t setPriority(int32_t priority) override
+    {
+        bool_t res { false };
+        if( Self::isConstructed() )
+        {
+            if( (PRIORITY_MIN <= priority) && (priority <= PRIORITY_MAX) )
+            {
+                priority_ = priority;
+                res = true;
+            }
+            else if (priority == PRIORITY_LOCK)
+            {
+                priority_ = priority;
+                res = true;
+            }
+            else 
+            {
+                res = false;
+            }
+        }
+        // @todo Implemet setting priority on system level regarding common API rage
+        return res;
+    }
+    
+    /**
+     * @copydoc eoos::api::Thread::getExecutionError()
+     */
+    int32_t getExecutionError() const override
     {
         return error_;
     }    
@@ -150,9 +162,9 @@ private:
     /**
      * @brief Constructor.
      *
-     * @return true if object has been constructed successfully.
+     * @return True if object has been constructed successfully.
      */
-    bool_t construct() noexcept try
+    bool_t construct()
     {  
         bool_t res {false};
         do
@@ -179,11 +191,7 @@ private:
             // The initial size of the stack, in bytes. The system rounds this value to the nearest page. 
             // If this parameter is zero, the new thread uses the default size for the executable. 
             // For more information, see Thread Stack Size.
-            int32_t const stackSise { task_->getStackSize() };
-            if(stackSise < 0)
-            {
-                break;
-            }
+            size_t const stackSise { task_->getStackSize() };
             ::SIZE_T const dwStackSize { static_cast<SIZE_T>(stackSise) };
             
             // A pointer to the application-defined function to be executed by the thread. 
@@ -210,33 +218,39 @@ private:
                 dwCreationFlags, 
                 lpThreadId
             );
-            if(handle == NULL)
+            if(handle == NULLPTR)
             {
                 break;
             }
             handle_ = handle;
             res = true;
         } while(false);
+        if( res == false )
+        {
+            status_ = STATUS_DEAD;
+        }
         return res;    
-    } catch (...) {
-        return false;
     }
-    
 
     /**
      * @brief Runs a method start() of this thread task.
+     *
+     * @return Thread execution resualt.
      */
     int32_t run()
     {
         error_ = task_->start();
-        status_ = DEAD;
+        status_ = STATUS_DEAD;
         return error_;
     }
 
     /**
      * @brief Runs a method of Runnable interface start vector.
+     *
+     * @param argument Thread arguments.
+     * @return Thread execution resualt.
      */
-    static ::DWORD start(::LPVOID argument) noexcept try
+    static ::DWORD start(::LPVOID argument) try
     {
         int32_t error {-1};
         if(argument != NULLPTR)
@@ -257,13 +271,14 @@ private:
     }
     
     /**
-     * The thread is created in a suspended state, and does not run until the ResumeThread function is called.
+     * @brief The thread is created in a suspended state, and does not run until the ResumeThread function is called.
      */
     static const ::DWORD WIN32_CREATE_SUSPENDED { 0x00000004 };
 
     /**
-     * The dwStackSize parameter specifies the initial reserve size of the stack. If this flag is not specified, 
-     * dwStackSize specifies the commit size.
+     * @brief The dwStackSize parameter specifies the initial reserve size of the stack. 
+     * 
+     * If this flag is not specified, dwStackSize specifies the commit size.
      */    
     static const ::DWORD WIN32_STACK_SIZE_PARAM_IS_A_RESERVATION { 0x00010000 };
 
@@ -280,12 +295,17 @@ private:
     /**
      * @brief Current status.
      */
-    Status status_ {NEW};
+    Status status_ {STATUS_NEW};
     
     /**
-     * @brief Error of the thread task executio.
+     * @brief This thread priority.
      */    
-    int32_t error_ {-1};    
+    int32_t priority_ {PRIORITY_NORM};    
+    
+    /**
+     * @brief Error of the thread task execution.
+     */    
+    int32_t error_ {-1};
 
     /**
      * @brief This class pointer.
@@ -300,7 +320,7 @@ private:
     /**
      * @brief A Windows handle of this thread.
      */
-    ::HANDLE handle_ {NULL};
+    ::HANDLE handle_ {NULLPTR};
 
 };
 

@@ -1,6 +1,5 @@
 /**
- * @brief Thread tasks scheduler.
- *
+ * @file      sys.Scheduler.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
  */
@@ -9,7 +8,6 @@
 
 #include "sys.NonCopyable.hpp"
 #include "api.Scheduler.hpp"
-#include "sys.GlobalThread.hpp"
 
 namespace eoos
 {
@@ -17,6 +15,7 @@ namespace sys
 {
 
 /**
+ * @class Scheduler
  * @brief Thread tasks scheduler class.
  */
 class Scheduler : public NonCopyable, public api::Scheduler
@@ -37,46 +36,24 @@ public:
     ~Scheduler() override;
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     bool_t isConstructed() const override;
 
     /**
-     * @brief Creates a new thread.
-     *
-     * @param task An user task which main method will be invoked when created thread is started.
-     * @return A new thread.
-     */
+     * @copydoc eoos::api::Scheduler::createThread(api::Task&)
+     */     
     api::Thread* createThread(api::Task& task) override;
-
-    /**
-     * @brief Returns currently executing thread.
-     *
-     * @return Executing thread.
-     */
-    api::Thread& getCurrentThread() const override;
     
     /**
-     * @brief Causes current thread to sleep.
-     *
-     * @param millis - a time to sleep in milliseconds.
-     * @param nanos  - an additional nanoseconds to sleep.
+     * @copydoc eoos::api::Scheduler::sleep(int64_t,int32_t)
      */
-    void sleepCurrentThread(int64_t millis, int32_t nanos = 0) override;        
+    void sleep(int64_t millis, int32_t nanos = 0) override;        
 
     /**
-     * @brief Yields to next thread.
+     * @copydoc eoos::api::Scheduler::yield()
      */
     void yield() override;
-
-    /**
-     * @brief Returns the toggle interface for controlling global thread switching.
-     *
-     * @return Toggle interface to disable and enable thread switching.
-     */
-    api::Toggle& toggle() override;
 
 private:
 
@@ -86,12 +63,16 @@ private:
      * @return true if object has been constructed successfully.
      */
     bool_t construct();
+    
+    /**
+     * @brief A Windows handle of root application process.
+     */
+    ::HANDLE processHandle_ {NULLPTR};
 
     /**
-     * @brief Global thread switching controller.
-     */
-    GlobalThread globalThread_ {};
-
+     * @brief Priority of the root application process.
+     */    
+    ::DWORD processPriority_ {0};
 };
 
 } // namespace sys

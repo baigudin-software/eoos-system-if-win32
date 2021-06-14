@@ -1,6 +1,5 @@
 /**
- * @brief Root class of the operating system for objects which cannot be copied.
- *
+ * @file      sys.NonCopyable.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2021, Sergey Baigudin, Baigudin Software
  */
@@ -15,6 +14,7 @@ namespace sys
 {
 
 /**
+ * @class NonCopyable
  * @brief Root class of the operating system for objects which cannot be copied.
  */
 class NonCopyable : public Object
@@ -36,32 +36,22 @@ public:
 private:
     
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj Reference to a source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     NonCopyable(const NonCopyable& obj) noexcept = delete;
     
     /**
-     * @brief Copy assignment operator.
-     *
-     * @param obj Reference to a source object.
-     * @return Reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */       
     NonCopyable& operator=(const NonCopyable& obj) noexcept = delete;   
 
     /**
-     * @brief Move constructor.
-     *
-     * @param obj Right reference to a source object.     
+     * @copydoc eoos::Object::Object(const Object&&)
      */       
     NonCopyable(NonCopyable&& obj) noexcept = delete;
     
     /**
-     * @brief Move assignment operator.
-     *
-     * @param obj Right reference to a source object.
-     * @return Reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&&)
      */
     NonCopyable& operator=(NonCopyable&& obj) noexcept = delete;
 

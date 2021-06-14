@@ -1,6 +1,5 @@
 /**
- * @brief Mutex.
- *
+ * @file      sys.Mutex.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2021, Sergey Baigudin, Baigudin Software
  */
@@ -10,14 +9,13 @@
 #include "sys.NonCopyable.hpp"
 #include "api.SysMutex.hpp"
 
-#include <Windows.h>
-
 namespace eoos
 {
 namespace sys
 {
 
 /**
+ * @class Mutex.
  * @brief Mutex class.
  */
 class Mutex : public NonCopyable, public api::Mutex
@@ -45,9 +43,7 @@ public:
     }
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     bool_t isConstructed() const noexcept override 
     {
@@ -55,9 +51,7 @@ public:
     }
     
     /**
-     * @brief Tries to locks this mutex.
-     *
-     * @return true if this mutex is locked successfully, or false if other thread locked on this mutex.
+     * @copydoc eoos::api::Mutex::tryLock()
      */
     bool_t tryLock() noexcept override try
     {
@@ -72,9 +66,7 @@ public:
     }    
 
     /**
-     * @brief Locks the mutex.
-     *
-     * @return true if the mutex is lock successfully.
+     * @copydoc eoos::api::Mutex::lock()
      */
     bool_t lock() noexcept override try
     {
@@ -90,7 +82,7 @@ public:
     }
 
     /**
-     * @brief Unlocks the mutex.
+     * @copydoc eoos::api::Mutex::unlock()
      */
     void unlock() noexcept override try
     {
@@ -107,7 +99,7 @@ private:
     /**
      * @brief Constructor.
      *
-     * @return true if object has been constructed successfully.
+     * @return True if object has been constructed successfully.
      */
     bool_t construct() noexcept try
     {

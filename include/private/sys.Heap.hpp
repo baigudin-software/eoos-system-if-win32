@@ -1,6 +1,5 @@
 /**
- * @brief The operating system heap memory.
- *
+ * @file      sys.Heap.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2018-2021, Sergey Baigudin, Baigudin Software
  */
@@ -16,6 +15,7 @@ namespace sys
 {
 
 /**
+ * @class Heap
  * @brief The operating system heap memory class.
  */
 class Heap : public NonCopyable, public api::Heap
@@ -36,27 +36,17 @@ public:
     ~Heap() override;
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     bool_t isConstructed() const override;
 
     /**
-     * @brief Allocates memory.
-     *
-     * @param size Required memory size in byte.
-     * @param ptr  NULLPTR value becomes to allocate memory, and
-     *             other given values are simply returned
-     *             as memory address.
-     * @return pointer to allocated memory or NULLPTR.
+     * @copydoc eoos::api::Heap::allocate(size_t,void*)
      */
     void* allocate(size_t size, void* ptr) override;
 
     /**
-     * @brief Frees an allocated memory.
-     *
-     * @param ptr Pointer to allocated memory.
+     * @copydoc eoos::api::Heap::free(void*)
      */
     void free(void* ptr) override;
 

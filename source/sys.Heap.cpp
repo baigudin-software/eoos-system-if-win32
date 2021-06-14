@@ -1,6 +1,5 @@
 /**
- * @brief The operating system heap memory.
- *
+ * @file      sys.Heap.cpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2018-2021, Sergey Baigudin, Baigudin Software
  */
