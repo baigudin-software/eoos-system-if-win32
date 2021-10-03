@@ -74,13 +74,13 @@ public:
      * @return Zero, or error code if the execution has been terminated.
      */
     int32_t execute();
-
+    
     /**
-     * @brief Returns the operating system syscall interface.
+     * @brief Terminates the system execution.
      *
-     * @return The operating system syscall interface.
+     * @param Error an exit code.
      */
-    static api::System& call();
+    static void exit(Error error);    
 
 private:
 
@@ -90,14 +90,7 @@ private:
      * @return True if object has been constructed successfully.
      */
     bool_t construct();
-
-    /**
-     * @brief Terminates the system execution.
-     *
-     * @param Error an exit code.
-     */
-    static void exit(Error error);    
-
+    
     /**
      * @brief Proves a resource.
      *
@@ -120,9 +113,9 @@ private:
     }
 
     /**
-     * @brief The operating system interface.
+     * @brief The operating system initialization flag.
      */
-    static api::System* system_;
+    static bool_t isInitialized_;
 
     /**
      * @brief The operating system heap memory.
