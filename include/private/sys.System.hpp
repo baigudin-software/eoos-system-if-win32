@@ -23,7 +23,6 @@ namespace sys
  */
 class System : public NonCopyable, public api::System
 {
-    using Self = System;
     using Parent = NonCopyable;
 
 public:

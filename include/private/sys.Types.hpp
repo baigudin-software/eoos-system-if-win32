@@ -8,9 +8,7 @@
 #ifndef SYS_TYPES_HPP_
 #define SYS_TYPES_HPP_
 
-#define _WIN32_WINNT (0x0A00)
-
-#include <Windows.h>
+#include "sys.Win32.hpp"
 #include "lib.Types.hpp"
 
 namespace eoos

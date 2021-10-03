@@ -20,7 +20,6 @@ namespace sys
  */
 class Mutex : public NonCopyable, public api::Mutex
 {
-    using Self = Mutex;
     using Parent = NonCopyable;
 
 public:
@@ -56,7 +55,7 @@ public:
     bool_t tryLock() noexcept override try
     {
         bool_t res {false};
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             res = ::TryEnterCriticalSection(pcs_) != 0;
         }
@@ -71,7 +70,7 @@ public:
     bool_t lock() noexcept override try
     {
         bool_t res {false};
-        if( not Self::isConstructed() )
+        if( not isConstructed() )
         {
             ::EnterCriticalSection(pcs_);
             res = true;
@@ -86,7 +85,7 @@ public:
      */
     void unlock() noexcept override try
     {
-        if( not Self::isConstructed() )
+        if( not isConstructed() )
         {
             ::LeaveCriticalSection(pcs_);
         }
@@ -106,7 +105,7 @@ private:
         bool_t res = false;
         do
         {   
-            if( not Self::isConstructed() )
+            if( not isConstructed() )
             {
                 break;
             }

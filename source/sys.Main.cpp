@@ -18,6 +18,7 @@
  * @return error code or zero.
  *
  * @todo Add the arguments to the function.
+ * @todo Revise to remove it at all as it won't be run successfully for the Win32.
  */
 int main() try
 {
