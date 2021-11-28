@@ -7,7 +7,7 @@
 #define SYS_MUTEX_HPP_
 
 #include "sys.NonCopyable.hpp"
-#include "api.SysMutex.hpp"
+#include "api.Mutex.hpp"
 
 namespace eoos
 {
@@ -29,7 +29,7 @@ public:
      */
     Mutex() noexcept : Parent()
     {
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed { construct() };
         setConstructed( isConstructed );
     }
 
@@ -70,7 +70,7 @@ public:
     bool_t lock() noexcept override try
     {
         bool_t res {false};
-        if( not isConstructed() )
+        if( isConstructed() )
         {
             ::EnterCriticalSection(pcs_);
             res = true;
@@ -85,7 +85,7 @@ public:
      */
     void unlock() noexcept override try
     {
-        if( not isConstructed() )
+        if( isConstructed() )
         {
             ::LeaveCriticalSection(pcs_);
         }
@@ -102,7 +102,7 @@ private:
      */
     bool_t construct() noexcept try
     {
-        bool_t res = false;
+        bool_t res { false };
         do
         {   
             if( not isConstructed() )
