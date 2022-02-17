@@ -43,16 +43,6 @@ public:
     bool_t isConstructed() const override;
 
     /**
-     * @copydoc eoos::api::System::getTime()
-     */
-    int64_t getTime() const override;
-
-    /**
-     * @copydoc eoos::api::System::getHeap()
-     */
-    api::Heap& getHeap() const override;
-
-    /**
      * @copydoc eoos::api::System::getScheduler()
      */
     api::Scheduler& getScheduler() const override;
@@ -115,11 +105,6 @@ private:
      * @brief The operating system initialization flag.
      */
     static bool_t isInitialized_;
-
-    /**
-     * @brief The operating system heap memory.
-     */
-    mutable Heap heap_ {};
 
     /**
      * @brief The operating system scheduler.

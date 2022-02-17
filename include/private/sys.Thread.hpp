@@ -87,24 +87,18 @@ public:
     /**
      * @copydoc eoos::api::Thread::join()
      */
-    void join() override try
+    bool_t join() override try
     {
+        bool_t res {false};
 	    if( isConstructed() )
         {
-            static_cast<void>( ::WaitForSingleObject(handle_, INFINITE) );
+            res = (::WaitForSingleObject(handle_, INFINITE) == 0) ? true : false;
         }
+        return res;
     } catch (...) {
-        return;
+        return false;
     }
 
-    /**
-     * @copydoc eoos::api::Thread::getId()
-     */
-    int64_t getId() const override
-    {
-        return isConstructed() ? static_cast<int64_t>(id_) : ID_WRONG;
-    }
-    
     /**
      * @copydoc eoos::api::Thread::getStatus()
      */
