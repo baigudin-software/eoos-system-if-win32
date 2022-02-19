@@ -232,6 +232,8 @@ private:
      */
     int32_t run()
     {
+        // @todo Fix that there should be no operations with this thread object data, as 
+        // calling thread might delete the object while the task was being executed.
         error_ = task_->start();
         status_ = STATUS_DEAD;
         return error_;
