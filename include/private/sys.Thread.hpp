@@ -29,11 +29,9 @@ public:
      * @brief Constructor of not constructed object.
      *
      * @param task      A task interface whose main method is invoked when this thread is started.
-     * @param scheduler A scheduler controls this thread.
      */
-    Thread(api::Task& task, Scheduler* const scheduler) try : Parent(),
-        task_          (&task),
-        scheduler_     (scheduler){
+    Thread(api::Task& task) try : Parent(),
+        task_          (&task){
         bool_t const isConstructed  { construct() };
         setConstructed( isConstructed );
     } catch (...) {
@@ -47,6 +45,8 @@ public:
     {
         if(handle_ != NULLPTR)
         {
+            // @todo The handle closing means the thread will stay in detached mode.
+            // Thus, to keep compatibility, common approach for all OSs shall be found.
             ::CloseHandle(handle_);
             handle_ = NULLPTR;
             status_ = STATUS_DEAD;
@@ -64,8 +64,9 @@ public:
     /**
      * @copydoc eoos::api::Thread::execute()
      */
-    void execute() override try
+    bool_t execute() override try
     {
+        bool_t res {false};
         if( isConstructed() && status_ == STATUS_NEW)
         {
             ::DWORD const exitCode = ::ResumeThread(handle_);
@@ -73,15 +74,17 @@ public:
             if(exitCode == 1)
             {
                 status_ = STATUS_RUNNABLE;
+                res = true;
             }
             else
             {
                 status_ = STATUS_DEAD;
             }
         }
+        return res;
     } catch (...) {
         status_ = STATUS_DEAD;
-        return;
+        return false;
     }
     
     /**
@@ -98,14 +101,6 @@ public:
     } catch (...) {
         return false;
     }
-
-    /**
-     * @copydoc eoos::api::Thread::getStatus()
-     */
-    Status getStatus() const override
-    {
-        return status_;
-    }    
 
     /**
      * @copydoc eoos::api::Thread::getPriority()
@@ -141,14 +136,6 @@ public:
         // @todo Implemet setting priority on system level regarding common API rage
         return res;
     }
-    
-    /**
-     * @copydoc eoos::api::Thread::getExecutionError()
-     */
-    int32_t getExecutionError() const override
-    {
-        return error_;
-    }    
 
 private:
 
@@ -166,11 +153,11 @@ private:
             {
                 break;
             }
-            if( task_ == NULLPTR || scheduler_ == NULLPTR )
+            if( task_ == NULLPTR )
             {
                 break;
             }
-            if( not task_->isConstructed() || not scheduler_->isConstructed() )
+            if( not task_->isConstructed() )
             {
                 break;
             }
@@ -193,7 +180,7 @@ private:
             ::LPTHREAD_START_ROUTINE const lpStartAddress {start};
             
             // A pointer to a variable to be passed to the thread.
-            ::LPVOID const lpParameter {&this_};
+            ::LPVOID const lpParameter {&task_};
             
             // The flags that control the creation of the thread.
             // WIN32_CREATE_SUSPENDED to wait, or 0.
@@ -215,6 +202,7 @@ private:
             {
                 break;
             }
+            status_ = STATUS_NEW;
             handle_ = handle;
             res = true;
         } while(false);
@@ -223,20 +211,6 @@ private:
             status_ = STATUS_DEAD;
         }
         return res;    
-    }
-
-    /**
-     * @brief Runs a method start() of this thread task.
-     *
-     * @return Thread execution resualt.
-     */
-    int32_t run()
-    {
-        // @todo Fix that there should be no operations with this thread object data, as 
-        // calling thread might delete the object while the task was being executed.
-        error_ = task_->start();
-        status_ = STATUS_DEAD;
-        return error_;
     }
 
     /**
@@ -250,13 +224,13 @@ private:
         int32_t error {-1};
         if(argument != NULLPTR)
         {
-            Thread* const thread = *reinterpret_cast<Thread**>(argument);
-            if(thread != NULLPTR)
+            api::Task* const task = *reinterpret_cast<api::Task**>(argument);
+            if(task != NULLPTR)
             {
-                if(thread->isConstructed())
+                if(task->isConstructed())
                 {
-                    // Invoke the member function through the pointer
-                    error = thread->run();
+                    task->start();
+                    error = 0;
                 }
             }
         }        
@@ -283,11 +257,6 @@ private:
     api::Task* task_ {NULLPTR};
 
     /**
-     * @brief The scheduler resource.
-     */
-    Scheduler* scheduler_ {NULLPTR};
-
-    /**
      * @brief Current status.
      */
     Status status_ {STATUS_NEW};
@@ -296,16 +265,6 @@ private:
      * @brief This thread priority.
      */    
     int32_t priority_ {PRIORITY_NORM};    
-    
-    /**
-     * @brief Error of the thread task execution.
-     */    
-    int32_t error_ {-1};
-
-    /**
-     * @brief This class pointer.
-     */
-    Thread* this_ {this};
 
     /**
      * @brief Current identifier.

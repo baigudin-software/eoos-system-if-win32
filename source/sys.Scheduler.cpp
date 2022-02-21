@@ -30,7 +30,7 @@ bool_t Scheduler::isConstructed() const
 
 api::Thread* Scheduler::createThread(api::Task& task) try
 {
-    return new Thread {task, this};
+    return new Thread {task};
 } catch (...) {
     return NULLPTR;
 }
