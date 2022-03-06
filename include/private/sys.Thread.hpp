@@ -95,7 +95,9 @@ public:
         bool_t res {false};
 	    if( isConstructed() )
         {
-            res = (::WaitForSingleObject(handle_, INFINITE) == 0) ? true : false;
+            ::DWORD const error { ::WaitForSingleObject(handle_, INFINITE) };
+            res = (error == 0) ? true : false;
+            status_ = STATUS_DEAD;
         }
         return res;
     } catch (...) {
@@ -171,8 +173,8 @@ private:
             // The initial size of the stack, in bytes. The system rounds this value to the nearest page. 
             // If this parameter is zero, the new thread uses the default size for the executable. 
             // For more information, see Thread Stack Size.
-            size_t const stackSise { task_->getStackSize() };
-            ::SIZE_T const dwStackSize { static_cast<SIZE_T>(stackSise) };
+            size_t const stackSize { task_->getStackSize() };
+            ::SIZE_T const dwStackSize { static_cast<SIZE_T>(stackSize) };
             
             // A pointer to the application-defined function to be executed by the thread. 
             // This pointer represents the starting address of the thread. 
@@ -224,7 +226,7 @@ private:
         int32_t error {-1};
         if(argument != NULLPTR)
         {
-            api::Task* const task = *reinterpret_cast<api::Task**>(argument);
+            api::Task* const task { *reinterpret_cast<api::Task**>(argument) };
             if(task != NULLPTR)
             {
                 if(task->isConstructed())
