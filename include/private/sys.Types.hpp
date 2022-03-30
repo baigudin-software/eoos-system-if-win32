@@ -8,8 +8,8 @@
 #ifndef SYS_TYPES_HPP_
 #define SYS_TYPES_HPP_
 
-#include "sys.Win32.hpp"
 #include "lib.Types.hpp"
+#include "sys.Win32.hpp"
 
 namespace eoos
 {

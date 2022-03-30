@@ -8,8 +8,6 @@
 #ifndef SYS_WIN32_HPP_
 #define SYS_WIN32_HPP_
 
-#define _WIN32_WINNT (0x0A00)
-
 #include <Windows.h>
 
 #endif // SYS_WIN32_HPP_

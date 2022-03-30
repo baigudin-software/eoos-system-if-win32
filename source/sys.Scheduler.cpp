@@ -35,16 +35,16 @@ api::Thread* Scheduler::createThread(api::Task& task) try
     return NULLPTR;
 }
 
-void Scheduler::sleep(int64_t millis, int32_t nanos) try
+void Scheduler::sleep(int32_t ms) try
 {
-    ::Sleep( static_cast< ::DWORD >(millis) );
+    ::Sleep( static_cast< ::DWORD >(ms) );
 } catch (...) {
     return;
 }
 
 void Scheduler::yield() try
 {
-    static_cast<void>( ::SwitchToThread() );
+    ::Sleep(0);
 } catch (...) {
     return;
 }
