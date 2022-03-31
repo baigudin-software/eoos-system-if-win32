@@ -35,11 +35,12 @@ api::Thread* Scheduler::createThread(api::Task& task) try
     return NULLPTR;
 }
 
-void Scheduler::sleep(int32_t ms) try
+bool_t Scheduler::sleep(int32_t ms) try
 {
     ::Sleep( static_cast< ::DWORD >(ms) );
+    return true;
 } catch (...) {
-    return;
+    return false;
 }
 
 void Scheduler::yield() try

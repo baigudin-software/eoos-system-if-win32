@@ -47,7 +47,7 @@ public:
     /**
      * @copydoc eoos::api::Scheduler::sleep(int32_t)
      */
-    void sleep(int32_t ms) override;        
+    bool_t sleep(int32_t ms) override;        
 
     /**
      * @copydoc eoos::api::Scheduler::yield()
