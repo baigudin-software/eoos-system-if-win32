@@ -1,7 +1,7 @@
 /**
  * @file      sys.System.cpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
 #include "sys.System.hpp"
 #include "sys.Mutex.hpp"

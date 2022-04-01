@@ -1,7 +1,7 @@
 /**
  * @file      sys.Heap.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2018-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2018-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_HEAP_HPP_
 #define SYS_HEAP_HPP_

@@ -1,7 +1,7 @@
 /**
  * @file      sys.Win32.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2021-2022, Sergey Baigudin, Baigudin Software
  * 
  * @brief Win32 includes and definitions.
  */

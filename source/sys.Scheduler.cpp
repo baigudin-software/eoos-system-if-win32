@@ -1,7 +1,7 @@
 /**
  * @file      sys.Scheduler.cpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
  */
 #include "sys.Scheduler.hpp"
 #include "sys.Thread.hpp"

@@ -1,7 +1,7 @@
 /**
  * @file      sys.System.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_SYSTEM_HPP_
 #define SYS_SYSTEM_HPP_

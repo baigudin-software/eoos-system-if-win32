@@ -1,7 +1,7 @@
 /**
  * @file      sys.Semaphore.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2017-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_SEMAPHORE_HPP_
 #define SYS_SEMAPHORE_HPP_

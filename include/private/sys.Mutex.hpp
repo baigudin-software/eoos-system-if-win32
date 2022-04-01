@@ -1,7 +1,7 @@
 /**
  * @file      sys.Mutex.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_MUTEX_HPP_
 #define SYS_MUTEX_HPP_

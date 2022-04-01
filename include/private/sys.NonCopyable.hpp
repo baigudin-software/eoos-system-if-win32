@@ -1,10 +1,10 @@
 /**
  * @file      sys.NonCopyable.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2021-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYS_NON_COPYABLE_HPP_
-#define SYS_NON_COPYABLE_HPP_
+#ifndef SYS_NONCOPYABLE_HPP_
+#define SYS_NONCOPYABLE_HPP_
 
 #include "sys.Object.hpp"
 
@@ -36,14 +36,14 @@ public:
 private:
     
     /**
-     * @copydoc eoos::Object::Object(const Object&)
+     * @copydoc eoos::Object::Object(Object const&)
      */
-    NonCopyable(const NonCopyable& obj) noexcept = delete;
+    NonCopyable(NonCopyable const& obj) noexcept = delete;
     
     /**
-     * @copydoc eoos::Object::operator=(const Object&)
+     * @copydoc eoos::Object::operator=(Object const&)
      */       
-    NonCopyable& operator=(const NonCopyable& obj) noexcept = delete;   
+    NonCopyable& operator=(NonCopyable const& obj) noexcept = delete;   
 
     /**
      * @copydoc eoos::Object::Object(const Object&&)
@@ -59,4 +59,4 @@ private:
 
 } // namespace sys
 } // namespace eoos
-#endif // SYS_NON_COPYABLE_HPP_
+#endif // SYS_NONCOPYABLE_HPP_
