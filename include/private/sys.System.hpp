@@ -55,7 +55,7 @@ public:
     /**
      * @copydoc eoos::api::System::creatSemaphore(int32_t,bool_t)
      */
-    api::Semaphore* createSemaphore(int32_t permits, bool_t isFair) override;
+    api::Semaphore* createSemaphore(int32_t permits) override;
 
     /**
      * @brief Executes the operating system.

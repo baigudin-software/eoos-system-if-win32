@@ -37,8 +37,13 @@ api::Thread* Scheduler::createThread(api::Task& task) try
 
 bool_t Scheduler::sleep(int32_t ms) try
 {
-    ::Sleep( static_cast< ::DWORD >(ms) );
-    return true;
+    bool_t res {false};
+    if(ms >= 0)
+    {    
+        ::Sleep( static_cast< ::DWORD >(ms) );
+        res = true;
+    }
+    return res;
 } catch (...) {
     return false;
 }

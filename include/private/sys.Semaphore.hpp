@@ -29,17 +29,25 @@ public:
      *
      * @param permits The initial number of permits available.
      */
-    Semaphore(int32_t permits) : Parent()
+    Semaphore(int32_t permits) try : Parent()
     {
         bool_t const isConstructed = construct(permits);
         setConstructed( isConstructed );
+    } catch (...) {
+        setConstructed(false);
     }
-
+    
     /**
      * @brief Destructor.
      */
     ~Semaphore() override
     {
+        if(handle_ != NULLPTR)
+        {
+            handle_ = NULLPTR;            
+            static_cast<void>( ::CloseHandle(handle_) );
+        }
+        
     }
 
     /**
@@ -53,44 +61,32 @@ public:
     /**
      * @copydoc eoos::api::Semaphore::acquire()
      */
-    bool_t acquire() override
+    bool_t acquire() override try
     {
-        if( not isConstructed() ) return false;
-        return false;
-    }
-
-    /**
-     * @copydoc eoos::api::Semaphore::acquire(int32_t)
-     */
-    bool_t acquire(int32_t permits) override
-    {
-        if( not isConstructed() ) return false;
+        bool_t res {false};
+        if( isConstructed() ) 
+        {
+            ::DWORD error {::WaitForSingleObject(handle_, INFINITE)};
+            res = (error == WAIT_OBJECT_0);
+        }
+        return res;
+    } catch (...) {
         return false;
     }
 
     /**
      * @copydoc eoos::api::Semaphore::release()
      */
-    void release() override
+    void release() override try
     {
-        if( not isConstructed() ) return;
+        if( isConstructed() )
+        {
+            release(1);
+        }
+    } catch (...) {
+        return;
     }
 
-    /**
-     * @copydoc eoos::api::Semaphore::release(int32_t)
-     */
-    void release(int32_t permits) override
-    {
-        if( not isConstructed() ) return;
-    }
-
-    /**
-     * @copydoc eoos::api::Semaphore::isFair()
-     */
-    bool_t isFair() const override
-    {
-        return false;
-    }
 
 private:
 
@@ -102,9 +98,58 @@ private:
      */
     bool_t construct(int32_t permits)
     {
-        if( not isConstructed() ) return false;
-        return true;
+        bool_t res {false};
+        do {
+            if( not isConstructed() )
+            {
+                break;
+            }
+            if( permits < 0 || permits > static_cast<int32_t>(MAXIMUM_COUNT) )
+            {
+                break;
+            }
+            ::LPSECURITY_ATTRIBUTES const lpSemaphoreAttributes {NULL};
+            ::LONG const lInitialCount {permits};
+            ::LONG const lMaximumCount {MAXIMUM_COUNT};
+            ::LPCSTR lpName {NULL};
+            ::HANDLE const handle = ::CreateSemaphore(
+                lpSemaphoreAttributes,
+                lInitialCount,
+                lMaximumCount,
+                lpName
+            );
+            if(handle == NULLPTR)
+            {
+                break;
+            }
+            handle_ = handle;
+            res = true;
+        } while(false);
+        return res;
     }
+    
+    /**
+     * @brief Releases the given number of permits.
+     *
+     * The function releases from the permits and returns these to the semaphore.
+     *
+     * @param permits The number of permits to release.
+     */
+    void release(int32_t permits)
+    {
+        ::LONG const lReleaseCount { static_cast<::LONG>(permits) };
+        static_cast<void>( ::ReleaseSemaphore(handle_, lReleaseCount, NULL) );
+    }
+
+    /**
+     * @brief Maximum Semaphore count.
+     */
+    static const ::LONG MAXIMUM_COUNT { 0x7FFFFFFF };
+
+    /**
+     * @brief A Windows handle of this thread.
+     */
+    ::HANDLE handle_ {NULLPTR};
 
 };
         

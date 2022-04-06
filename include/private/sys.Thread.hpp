@@ -28,7 +28,7 @@ public:
     /**
      * @brief Constructor of not constructed object.
      *
-     * @param task      A task interface whose main method is invoked when this thread is started.
+     * @param task      A task interface whose main function is invoked when this thread is started.
      */
     Thread(api::Task& task) try : Parent(),
         task_          (&task){
@@ -45,11 +45,11 @@ public:
     {
         if(handle_ != NULLPTR)
         {
+            status_ = STATUS_DEAD;            
+            handle_ = NULLPTR;
             // @todo The handle closing means the thread will stay in detached mode.
             // Thus, to keep compatibility, common approach for all OSs shall be found.
-            ::CloseHandle(handle_);
-            handle_ = NULLPTR;
-            status_ = STATUS_DEAD;
+            static_cast<void>( ::CloseHandle(handle_) );
         }
     }   
 
@@ -216,7 +216,7 @@ private:
     }
 
     /**
-     * @brief Runs a method of Runnable interface start vector.
+     * @brief Runs a function of Runnable interface start vector.
      *
      * @param argument Thread arguments.
      * @return Thread execution resualt.
