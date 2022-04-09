@@ -109,7 +109,7 @@ private:
             {
                 break;
             }
-            const ::DWORD spinCount { 4000 };
+            ::DWORD const spinCount { 4000 };
             ::BOOL const isInitialize { ::InitializeCriticalSectionAndSpinCount(pcs_, spinCount) };
             if(isInitialize == 0)
             {

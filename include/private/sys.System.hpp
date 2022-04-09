@@ -53,7 +53,7 @@ public:
     api::Mutex* createMutex() override;
 
     /**
-     * @copydoc eoos::api::System::creatSemaphore(int32_t,bool_t)
+     * @copydoc eoos::api::System::creatSemaphore(int32_t)
      */
     api::Semaphore* createSemaphore(int32_t permits) override;
 
