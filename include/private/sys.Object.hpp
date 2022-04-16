@@ -49,12 +49,12 @@ public:
     }    
 
     /**
-     * @copydoc eoos::Object::Object(const Object&&)
+     * @copydoc eoos::Object::Object(Object&&)
      */       
     Object(Object&& obj) noexcept : Parent( lib::move(obj) ) {}
     
     /**
-     * @copydoc eoos::Object::operator=(const Object&&)
+     * @copydoc eoos::Object::operator=(Object&&)
      */
     Object& operator=(Object&& obj) noexcept
     {

@@ -46,12 +46,12 @@ private:
     NonCopyable& operator=(NonCopyable const& obj) noexcept = delete;   
 
     /**
-     * @copydoc eoos::Object::Object(const Object&&)
+     * @copydoc eoos::Object::Object(Object&&)
      */       
     NonCopyable(NonCopyable&& obj) noexcept = delete;
     
     /**
-     * @copydoc eoos::Object::operator=(const Object&&)
+     * @copydoc eoos::Object::operator=(Object&&)
      */
     NonCopyable& operator=(NonCopyable&& obj) noexcept = delete;
 
