@@ -45,7 +45,7 @@ public:
     /**
      * @copydoc eoos::api::System::getScheduler()
      */
-    api::Scheduler& getScheduler() const override;
+    api::Scheduler& getScheduler() override;
 
     /**
      * @copydoc eoos::api::System::createMutex()

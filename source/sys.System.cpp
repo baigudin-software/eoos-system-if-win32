@@ -32,7 +32,7 @@ bool_t System::isConstructed() const
     return Parent::isConstructed();
 }
 
-api::Scheduler& System::getScheduler() const
+api::Scheduler& System::getScheduler()
 {
     if( not isConstructed() )
     {
