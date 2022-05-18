@@ -27,8 +27,9 @@ public:
     /**
      * @brief Constructor.
      */
-    Mutex() noexcept : Parent()
-    {
+    Mutex() noexcept 
+        : NonCopyable()
+        , api::Mutex() {
         bool_t const isConstructed { construct() };
         setConstructed( isConstructed );
     }

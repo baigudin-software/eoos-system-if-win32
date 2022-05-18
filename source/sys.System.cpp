@@ -16,8 +16,9 @@ namespace sys
         
 bool_t System::isInitialized_ {false};
 
-System::System() : Parent()
-{
+System::System() 
+    : NonCopyable()
+    , api::System() {
     bool_t const isConstructed = construct();
     setConstructed( isConstructed );
 }

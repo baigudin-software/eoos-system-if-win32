@@ -11,8 +11,9 @@ namespace eoos
 namespace sys
 {
     
-Scheduler::Scheduler() try : Parent()
-{
+Scheduler::Scheduler() try 
+    : NonCopyable()
+    , api::Scheduler() {
     bool_t const isConstructed = construct();
     setConstructed( isConstructed );
 } catch (...) {

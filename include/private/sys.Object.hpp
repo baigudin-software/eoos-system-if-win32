@@ -27,7 +27,9 @@ public:
     /**
      * @brief Constructor.
      */
-    Object() noexcept : Parent() {}
+    Object() noexcept 
+        : ::eoos::Object<>() {
+    }
 
     /**
      * @brief Destructor.
@@ -37,7 +39,9 @@ public:
     /**
      * @copydoc eoos::Object::Object(const Object&)
      */
-    Object(const Object& obj) noexcept : Parent(obj) {} 
+    Object(const Object& obj) noexcept 
+        : ::eoos::Object<>(obj) {
+    } 
     
     /**
      * @copydoc eoos::Object::operator=(const Object&)
@@ -51,7 +55,9 @@ public:
     /**
      * @copydoc eoos::Object::Object(Object&&)
      */       
-    Object(Object&& obj) noexcept : Parent( lib::move(obj) ) {}
+    Object(Object&& obj) noexcept 
+        : ::eoos::Object<>( lib::move(obj) ) {
+    }
     
     /**
      * @copydoc eoos::Object::operator=(Object&&)

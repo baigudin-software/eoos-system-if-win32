@@ -30,8 +30,10 @@ public:
      *
      * @param task      A task interface whose main function is invoked when this thread is started.
      */
-    Thread(api::Task& task) try : Parent(),
-        task_          (&task){
+    Thread(api::Task& task) try 
+        : NonCopyable()
+        , api::Thread()
+        , task_(&task){
         bool_t const isConstructed  { construct() };
         setConstructed( isConstructed );
     } catch (...) {
