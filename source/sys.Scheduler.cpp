@@ -61,7 +61,7 @@ bool_t Scheduler::construct()
     bool_t res {false};
     do
     {
-        if( not isConstructed() )
+        if( !isConstructed() )
         {
             break;
         }

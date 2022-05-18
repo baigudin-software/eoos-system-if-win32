@@ -92,7 +92,7 @@ private:
     {
         if(res != NULLPTR)
         {
-            if( not res->isConstructed() )
+            if( !res->isConstructed() )
             {
                 delete res;
                 res = NULLPTR;

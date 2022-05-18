@@ -153,7 +153,7 @@ private:
         bool_t res {false};
         do
         {
-            if( not isConstructed() )
+            if( !isConstructed() )
             {
                 break;
             }
@@ -161,7 +161,7 @@ private:
             {
                 break;
             }
-            if( not task_->isConstructed() )
+            if( !task_->isConstructed() )
             {
                 break;
             }

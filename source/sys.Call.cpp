@@ -27,7 +27,7 @@ bool_t Call::initialize()
             break;
         }
         isConstructed = system_->isConstructed();
-        if( not isConstructed )
+        if( !isConstructed )
         {
             delete system_;
             system_ = NULLPTR;

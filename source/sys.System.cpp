@@ -35,7 +35,7 @@ bool_t System::isConstructed() const
 
 api::Scheduler& System::getScheduler()
 {
-    if( not isConstructed() )
+    if( !isConstructed() )
     {
         exit(Error::SYSCALL_CALLED);
     }
@@ -57,7 +57,7 @@ api::Semaphore* System::createSemaphore(int32_t permits)
 int32_t System::execute()
 {
     int32_t error;
-    if( not isConstructed() )
+    if( !isConstructed() )
     {
         error = static_cast<int32_t>(Error::UNDEFINED);
     }
@@ -88,7 +88,7 @@ bool_t System::construct()
             res = false;
             continue;
         }
-        if( not scheduler_.isConstructed() )
+        if( !scheduler_.isConstructed() )
         {
             res = false;
             continue;
