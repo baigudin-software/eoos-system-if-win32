@@ -37,16 +37,16 @@ public:
     ~Object() noexcept override {}
     
     /**
-     * @copydoc eoos::Object::Object(const Object&)
+     * @copydoc eoos::Object::Object(Object const&)
      */
-    Object(const Object& obj) noexcept 
+    Object(Object const& obj) noexcept 
         : ::eoos::Object<>(obj) {
     } 
     
     /**
-     * @copydoc eoos::Object::operator=(const Object&)
+     * @copydoc eoos::Object::operator=(Object const&)
      */       
-    Object& operator=(const Object& obj) noexcept
+    Object& operator=(Object const& obj) noexcept
     {
         Parent::operator=(obj);
         return *this;
