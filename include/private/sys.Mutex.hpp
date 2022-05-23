@@ -30,7 +30,7 @@ public:
     Mutex() noexcept 
         : NonCopyable()
         , api::Mutex() {
-        bool_t const isConstructed { construct() };
+        bool_t const isConstructed{ construct() };
         setConstructed( isConstructed );
     }
 
@@ -45,7 +45,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const noexcept override 
+    bool_t isConstructed() const noexcept override ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
     {
         return Parent::isConstructed();
     }
@@ -55,7 +55,7 @@ public:
      */
     bool_t tryLock() noexcept override try
     {
-        bool_t res {false};
+        bool_t res{ false };
         if( isConstructed() )
         {
             res = ::TryEnterCriticalSection(pcs_) != 0;
@@ -70,7 +70,7 @@ public:
      */
     bool_t lock() noexcept override try
     {
-        bool_t res {false};
+        bool_t res{ false };
         if( isConstructed() )
         {
             ::EnterCriticalSection(pcs_);
@@ -101,37 +101,58 @@ private:
      *
      * @return True if object has been constructed successfully.
      */
-    bool_t construct() noexcept try
+    bool_t construct() const noexcept try
     {
-        bool_t res { false };
-        do
+        bool_t res{ false };
+        while(true)
         {   
             if( !isConstructed() )
             {
                 break;
             }
-            ::DWORD const spinCount { 4000 };
-            ::BOOL const isInitialize { ::InitializeCriticalSectionAndSpinCount(pcs_, spinCount) };
+            ::DWORD const spinCount{ 4000U };
+            ::BOOL const isInitialize{ ::InitializeCriticalSectionAndSpinCount(pcs_, spinCount) };
             if(isInitialize == 0)
             {
                 break;
             }
             res = true;
-        } while(false);
+            break;
+        }
         return res;
     } catch (...) {
         return false;
     }
+    
+    /**
+     * @copydoc eoos::Object::Object(Object const&)
+     */
+    Mutex(Mutex const&) noexcept = delete;
+    
+    /**
+     * @copydoc eoos::Object::operator=(Object const&)
+     */       
+    Mutex& operator=(Mutex const&) noexcept = delete;   
+
+    /**
+     * @copydoc eoos::Object::Object(Object&&)
+     */       
+    Mutex(Mutex&&) noexcept = delete;
+    
+    /**
+     * @copydoc eoos::Object::operator=(Object&&)
+     */
+    Mutex& operator=(Mutex&&) noexcept = delete;        
 
     /**
      * @brief Windows critical section object.
      */    
-	::CRITICAL_SECTION cs_;    
+	::CRITICAL_SECTION cs_{};    
 
     /**
      * @brief Pointer to Windows critical section object.
      */    
-	::LPCRITICAL_SECTION const pcs_ {&cs_};    
+	::LPCRITICAL_SECTION const pcs_{ &cs_ };    
 
 };
 

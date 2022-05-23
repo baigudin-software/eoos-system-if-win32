@@ -8,7 +8,6 @@
 
 #include "sys.NonCopyable.hpp"
 #include "api.System.hpp"
-#include "sys.Heap.hpp"
 #include "sys.Scheduler.hpp"
 #include "sys.Error.hpp"
 
@@ -40,7 +39,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override;
+    bool_t isConstructed() const override; ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
 
     /**
      * @copydoc eoos::api::System::getScheduler()
@@ -78,28 +77,27 @@ private:
      *
      * @return True if object has been constructed successfully.
      */
-    bool_t construct();
+    bool_t construct() const;
     
     /**
-     * @brief Proves a resource.
-     *
-     * @tparam T Resource type.
-     * @param res A resource.
-     * @return A passed resource, or NULLPTR if the resource has not been approved.
+     * @copydoc eoos::Object::Object(Object const&)
      */
-    template <class T>
-    static T* proveResource(T* res)
-    {
-        if(res != NULLPTR)
-        {
-            if( !res->isConstructed() )
-            {
-                delete res;
-                res = NULLPTR;
-            }
-        }
-        return res;
-    }
+    System(System const&) noexcept = delete;
+    
+    /**
+     * @copydoc eoos::Object::operator=(Object const&)
+     */       
+    System& operator=(System const&) noexcept = delete;   
+
+    /**
+     * @copydoc eoos::Object::Object(Object&&)
+     */       
+    System(System&&) noexcept = delete;
+    
+    /**
+     * @copydoc eoos::Object::operator=(Object&&)
+     */
+    System& operator=(System&&) noexcept = delete;
 
     /**
      * @brief The operating system initialization flag.
@@ -109,7 +107,7 @@ private:
     /**
      * @brief The operating system scheduler.
      */
-    mutable Scheduler scheduler_ {};
+    mutable Scheduler scheduler_{};
 
 };
 

@@ -26,36 +26,34 @@ public:
     /**
      * @brief Constructor.
      */
-    NonCopyable() noexcept 
-        : Object() {
-    }
+    NonCopyable() = default;
 
     /**
      * @brief Destructor.
      */
-    ~NonCopyable() noexcept override {}
+    ~NonCopyable() override = default;
     
 private:
     
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    NonCopyable(NonCopyable const& obj) noexcept = delete;
+    NonCopyable(NonCopyable const&) noexcept = delete;
     
     /**
      * @copydoc eoos::Object::operator=(Object const&)
      */       
-    NonCopyable& operator=(NonCopyable const& obj) noexcept = delete;   
+    NonCopyable& operator=(NonCopyable const&) noexcept = delete;   
 
     /**
      * @copydoc eoos::Object::Object(Object&&)
      */       
-    NonCopyable(NonCopyable&& obj) noexcept = delete;
+    NonCopyable(NonCopyable&&) noexcept = delete;
     
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    NonCopyable& operator=(NonCopyable&& obj) noexcept = delete;
+    NonCopyable& operator=(NonCopyable&&) noexcept = delete;
 
 };
 

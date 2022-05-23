@@ -32,17 +32,17 @@ public:
     /**
      * @brief Destructor.
      */
-    ~Scheduler() override;
+    ~Scheduler() override = default;
 
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override;
+    bool_t isConstructed() const override; ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
 
     /**
      * @copydoc eoos::api::Scheduler::createThread(api::Task&)
      */     
-    api::Thread* createThread(api::Task& task) override;
+    api::Thread* createThread(api::Task& task) override; ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
     
     /**
      * @copydoc eoos::api::Scheduler::sleep(int32_t)
@@ -64,14 +64,34 @@ private:
     bool_t construct();
     
     /**
+     * @copydoc eoos::Object::Object(Object const&)
+     */
+    Scheduler(Scheduler const&) noexcept = delete;
+    
+    /**
+     * @copydoc eoos::Object::operator=(Object const&)
+     */       
+    Scheduler& operator=(Scheduler const&) noexcept = delete;   
+
+    /**
+     * @copydoc eoos::Object::Object(Object&&)
+     */       
+    Scheduler(Scheduler&&) noexcept = delete;
+    
+    /**
+     * @copydoc eoos::Object::operator=(Object&&)
+     */
+    Scheduler& operator=(Scheduler&&) noexcept = delete;    
+    
+    /**
      * @brief A Windows handle of root application process.
      */
-    ::HANDLE processHandle_ {NULLPTR};
+    ::HANDLE processHandle_{ NULLPTR };
 
     /**
      * @brief Priority of the root application process.
      */    
-    ::DWORD processPriority_ {0};
+    ::DWORD processPriority_{ 0U };
 };
 
 } // namespace sys

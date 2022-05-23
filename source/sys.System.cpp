@@ -8,18 +8,19 @@
 #include "sys.Semaphore.hpp"
 #include "Program.hpp"
 #include "lib.LinkedList.hpp"
+#include "lib.UniquePointer.hpp"
 
 namespace eoos
 {
 namespace sys
 {
         
-bool_t System::isInitialized_ {false};
+bool_t System::isInitialized_{ false };
 
 System::System() 
     : NonCopyable()
     , api::System() {
-    bool_t const isConstructed = construct();
+    bool_t const isConstructed{ construct() };
     setConstructed( isConstructed );
 }
 
@@ -39,22 +40,48 @@ api::Scheduler& System::getScheduler()
     {
         exit(Error::SYSCALL_CALLED);
     }
-    return scheduler_;
+    return scheduler_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-api::Mutex* System::createMutex()
+api::Mutex* System::createMutex() try
 {
-    api::Mutex* const res = isConstructed() ? new Mutex() : NULLPTR;
-    return proveResource(res);
+    if( !isConstructed() )
+    {
+        return NULLPTR;
+    }    
+    lib::UniquePointer<api::Mutex> res{ new Mutex() }; ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
+    if( !res.isNull() )
+    {
+        if( !res->isConstructed() )
+        {
+            res.reset();
+        }
+    }
+    return res.release();
+} catch (...) {
+    return NULLPTR;
 }
 
-api::Semaphore* System::createSemaphore(int32_t permits)
+api::Semaphore* System::createSemaphore(int32_t permits) try
 {
-    api::Semaphore* const res = isConstructed() ? new Semaphore(permits) : NULLPTR;
-    return proveResource(res);
+    if( !isConstructed() )
+    {
+        return NULLPTR;
+    }
+    lib::UniquePointer<api::Semaphore> res{ new Semaphore(permits) }; ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
+    if( !res.isNull() )
+    {
+        if( !res->isConstructed() )
+        {
+            res.reset();
+        }
+    }
+    return res.release();
+} catch (...) {
+    return NULLPTR;
 }
 
-int32_t System::execute()
+int32_t System::execute() ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
 {
     int32_t error;
     if( !isConstructed() )
@@ -71,16 +98,15 @@ int32_t System::execute()
 
 void System::exit(Error const error)
 {
-    ::ExitProcess(static_cast<int32_t>(error));
+    ::ExitProcess(static_cast< ::UINT >(error));
     // This code must NOT be executed
     // @todo throw an exection here is better.
-    volatile bool_t const isTerminated = true;
-    while( isTerminated ){};
+    while( true ){}
 }
 
-bool_t System::construct()
+bool_t System::construct() const
 {
-    bool_t res = isConstructed();
+    bool_t res{ isConstructed() };
     while(res == true)
     {
         if( isInitialized_ )

@@ -5,23 +5,18 @@
  */
 #include "sys.Scheduler.hpp"
 #include "sys.Thread.hpp"
+#include "lib.UniquePointer.hpp"
 
 namespace eoos
 {
 namespace sys
 {
     
-Scheduler::Scheduler() try 
+Scheduler::Scheduler()
     : NonCopyable()
     , api::Scheduler() {
-    bool_t const isConstructed = construct();
+    bool_t const isConstructed{ construct() };
     setConstructed( isConstructed );
-} catch (...) {
-    setConstructed(false);
-}
-
-Scheduler::~Scheduler()
-{
 }
 
 bool_t Scheduler::isConstructed() const
@@ -29,16 +24,28 @@ bool_t Scheduler::isConstructed() const
     return Parent::isConstructed();
 }
 
-api::Thread* Scheduler::createThread(api::Task& task) try
+api::Thread* Scheduler::createThread(api::Task& task) try ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
 {
-    return new Thread {task};
+    if( !isConstructed() )
+    {
+        return NULLPTR;
+    }    
+    lib::UniquePointer<Thread> res{ new Thread(task) }; ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
+    if( !res.isNull() )
+    {
+        if( !res->isConstructed() )
+        {
+            res.reset();
+        }
+    }
+    return res.release();
 } catch (...) {
     return NULLPTR;
 }
 
 bool_t Scheduler::sleep(int32_t ms) try
 {
-    bool_t res {false};
+    bool_t res{ false };
     if(ms >= 0)
     {    
         ::Sleep( static_cast< ::DWORD >(ms) );
@@ -51,15 +58,15 @@ bool_t Scheduler::sleep(int32_t ms) try
 
 void Scheduler::yield() try
 {
-    ::Sleep(0);
+    ::Sleep(0U);
 } catch (...) {
     return;
 }
 
-bool_t Scheduler::construct()
+bool_t Scheduler::construct() try
 {
-    bool_t res {false};
-    do
+    bool_t res{ false };
+    while(true)
     {
         if( !isConstructed() )
         {
@@ -71,13 +78,16 @@ bool_t Scheduler::construct()
             break;
         }
         processPriority_ = ::GetPriorityClass(processHandle_);
-        if(processPriority_ == 0)
+        if(processPriority_ == 0U)
         {
             break;
         }
         res = true;
-    } while(false);
+        break;
+    }
     return res;
+} catch (...) {
+    return false;
 }
 
 } // namespace sys
