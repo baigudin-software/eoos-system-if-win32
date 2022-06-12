@@ -11,8 +11,8 @@ namespace sys
 {
 
 Configuration::Configuration()
-    : heapSize    (0x00001000)
-    , stackSize   (0x00000800) {
+    : heapSize  (0x00000000U)
+    , stackSize (0x00000000U) {
 }
 
 } // namespace sys

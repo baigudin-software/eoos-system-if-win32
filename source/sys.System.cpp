@@ -123,6 +123,20 @@ api::System& System::getSystem()
     return *eoos_;
 }
 
+#ifdef EOOS_NO_STRICT_MISRA_RULES
+
+void* System::operator new(size_t) noexcept
+{
+    return NULLPTR;
+}
+
+void System::operator delete(void*) 
+{
+}
+
+#endif // EOOS_NO_STRICT_MISRA_RULES
+
+
 void System::exit(Error const error)
 {
     ::ExitProcess(static_cast< ::UINT >(error));

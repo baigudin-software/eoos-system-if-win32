@@ -69,7 +69,7 @@ public:
     void free(void* ptr) override
     {
         #ifdef EOOS_NO_STRICT_MISRA_RULES
-        cell_t* const mem = reinterpret_cast<cell_t* const>(ptr);
+        cell_t* const mem{ reinterpret_cast<cell_t* const>(ptr) };
         delete[] mem;
         #else
         static_cast<void>(ptr); // Avoid MISRA-C++:2008 Rule 0–1–3 and AUTOSAR C++14 Rule A0-1-4

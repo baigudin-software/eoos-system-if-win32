@@ -3,8 +3,8 @@
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef CONFIGURATION_HPP_
-#define CONFIGURATION_HPP_
+#ifndef SYS_CONFIGURATION_HPP_
+#define SYS_CONFIGURATION_HPP_
 
 #include "Types.hpp"
 
@@ -42,4 +42,4 @@ struct Configuration
 
 } // namespace sys
 } // namespace eoos
-#endif // CONFIGURATION_HPP_
+#endif // SYS_CONFIGURATION_HPP_

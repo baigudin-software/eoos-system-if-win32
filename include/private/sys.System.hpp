@@ -124,10 +124,7 @@ private:
      * @param size A number of bytes to allocate.
      * @return Allocated memory address or a null pointer.
      */
-    static void* operator new(size_t const ) noexcept 
-    {
-        return NULLPTR;
-    }
+    static void* operator new(size_t) noexcept;
 
     /**
      * @brief Operator delete.
@@ -136,7 +133,7 @@ private:
      *
      * @param ptr An address of allocated memory block or a null pointer.
      */
-    static void operator delete(void* const ptr) {}
+    static void operator delete(void*);
 
     #endif // EOOS_NO_STRICT_MISRA_RULES
     
