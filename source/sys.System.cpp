@@ -15,7 +15,7 @@ namespace eoos
 namespace sys
 {
         
-bool_t System::isInitialized_{ false };
+api::System* System::eoos_{ NULLPTR };
 
 System::System() 
     : NonCopyable()
@@ -26,7 +26,7 @@ System::System()
 
 System::~System()
 {
-    isInitialized_ = false;
+    eoos_ = NULLPTR;
 }
 
 bool_t System::isConstructed() const
@@ -41,6 +41,15 @@ api::Scheduler& System::getScheduler()
         exit(Error::SYSCALL_CALLED);
     }
     return scheduler_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
+}
+
+api::Heap& System::getHeap()
+{
+    if( !isConstructed() )
+    {
+        exit(Error::SYSCALL_CALLED);
+    }
+    return heap_;
 }
 
 api::Mutex* System::createMutex() try
@@ -83,6 +92,11 @@ api::Semaphore* System::createSemaphore(int32_t permits) try
 
 int32_t System::execute() ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
 {
+    return execute(0, NULLPTR);
+}
+
+int32_t System::execute(int32_t argc, char_t* argv[])
+{
     int32_t error;
     if( !isConstructed() )
     {
@@ -91,9 +105,22 @@ int32_t System::execute() ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
     else
     {
         lib::LinkedList<char_t*> args;
-        error = Program::start(&args);
+        for(int32_t i(0); i<argc; i++)
+        {
+            args.add(argv[i]);
+        }
+        error = Program::start(args);
     }
     return error;
+}
+
+api::System& System::getSystem()
+{
+    if(eoos_ == NULLPTR)
+    {
+        exit(Error::SYSCALL_CALLED);
+    }
+    return *eoos_;
 }
 
 void System::exit(Error const error)
@@ -104,12 +131,12 @@ void System::exit(Error const error)
     while( true ){}
 }
 
-bool_t System::construct() const
+bool_t System::construct()
 {
     bool_t res{ isConstructed() };
     while(res == true)
     {
-        if( isInitialized_ )
+        if( eoos_ != NULLPTR )
         {
             res = false;
             continue;
@@ -119,7 +146,12 @@ bool_t System::construct() const
             res = false;
             continue;
         }
-        isInitialized_ = true;
+        if( !heap_.isConstructed() )
+        {
+            res = false;
+            continue;
+        }
+        eoos_ = this;
         break;
     }
     return res;

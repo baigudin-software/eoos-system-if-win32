@@ -6,7 +6,7 @@
 #ifndef SYS_OBJECT_HPP_
 #define SYS_OBJECT_HPP_
 
-#include "Object.hpp"
+#include "lib.Object.hpp"
 #include "sys.Types.hpp"
 
 namespace eoos
@@ -18,9 +18,9 @@ namespace sys
  * @class Object
  * @brief Root class of the operating system class hierarchy.
  */
-class Object : public ::eoos::Object<>
+class Object : public lib::Object<>
 {
-    using Parent = ::eoos::Object<>;
+    using Parent = lib::Object<>;
 
 public:
 
@@ -40,7 +40,7 @@ protected:
      * @copydoc eoos::Object::Object(Object const&)
      */
     Object(Object const& obj) noexcept 
-        : ::eoos::Object<>(obj) {
+        : lib::Object<>(obj) {
     } 
     
     /**
@@ -56,7 +56,7 @@ protected:
      * @copydoc eoos::Object::Object(Object&&)
      */       
     Object(Object&& obj) noexcept ///< SCA AUTOSAR-C++14 Defected Rule A8-4-8
-        : ::eoos::Object<>( lib::move(obj) ) {
+        : lib::Object<>( lib::move(obj) ) {
     }
     
     /**

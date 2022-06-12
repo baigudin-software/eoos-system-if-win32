@@ -137,20 +137,7 @@ private:
     }  catch (...) {
         return false;
     }
-    
-    /**
-     * @brief Releases the given number of permits.
-     *
-     * The function releases from the permits and returns these to the semaphore.
-     *
-     * @param permits The number of permits to release.
-     */
-    void release(int32_t permits) ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
-    {
-        ::LONG const lReleaseCount{ static_cast< ::LONG >(permits) };
-        static_cast<void>( ::ReleaseSemaphore(handle_, lReleaseCount, NULL) );
-    }
-    
+
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
@@ -169,7 +156,20 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    Semaphore& operator=(Semaphore&&) noexcept = delete;    
+    Semaphore& operator=(Semaphore&&) noexcept = delete;        
+    
+    /**
+     * @brief Releases the given number of permits.
+     *
+     * The function releases from the permits and returns these to the semaphore.
+     *
+     * @param permits The number of permits to release.
+     */
+    void release(int32_t permits) ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
+    {
+        ::LONG const lReleaseCount{ static_cast< ::LONG >(permits) };
+        static_cast<void>( ::ReleaseSemaphore(handle_, lReleaseCount, NULL) );
+    }
 
     /**
      * @brief Maximum Semaphore count.
