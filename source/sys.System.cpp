@@ -52,6 +52,24 @@ api::Heap& System::getHeap()
     return heap_;
 }
 
+api::OutStream<char_t>& System::getOutStreamChar()
+{
+    if( !isConstructed() )
+    {
+        exit(Error::SYSCALL_CALLED);
+    }
+    return cout_;
+}
+
+api::OutStream<char_t>& System::getErrorStreamChar()
+{
+    if( !isConstructed() )
+    {
+        exit(Error::SYSCALL_CALLED);
+    }
+    return cerr_;
+}
+
 api::Mutex* System::createMutex() try
 {
     if( !isConstructed() )
@@ -105,6 +123,7 @@ int32_t System::execute(int32_t argc, char_t* argv[])
     else
     {
         lib::LinkedList<char_t*> args;
+        args.setIllegal("");
         for(int32_t i(0); i<argc; i++)
         {
             args.add(argv[i]);

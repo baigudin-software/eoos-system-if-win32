@@ -49,11 +49,11 @@ public:
     {
         if(handle_ != NULLPTR)
         {
-            status_ = STATUS_DEAD;            
-            handle_ = NULLPTR;
             // @todo The handle closing means the thread will stay in detached mode.
             // Thus, to keep compatibility, common approach for all OSs shall be found.
             static_cast<void>( ::CloseHandle(handle_) );
+            status_ = STATUS_DEAD;            
+            handle_ = NULLPTR;
         }
     }   
 

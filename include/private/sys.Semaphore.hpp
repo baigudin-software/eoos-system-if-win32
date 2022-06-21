@@ -43,8 +43,8 @@ public:
     {
         if(handle_ != NULLPTR)
         {
-            handle_ = NULLPTR;            
             static_cast<void>( ::CloseHandle(handle_) );
+            handle_ = NULLPTR;            
         }
         
     }
