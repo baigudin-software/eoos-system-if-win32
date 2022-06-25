@@ -184,6 +184,16 @@ bool_t System::construct()
             res = false;
             continue;
         }
+        if( !cout_.isConstructed() )
+        {
+            res = false;
+            continue;
+        }
+        if( !cerr_.isConstructed() )
+        {
+            res = false;
+            continue;
+        }
         eoos_ = this;
         break;
     }
