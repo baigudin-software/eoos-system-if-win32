@@ -31,8 +31,8 @@ public:
      */
     enum class Type : int32_t
     {
-        OUT, ///< @brief COUT
-        ERR  ///< @brief CERR
+        COUT, ///< @brief COUT
+        CERR  ///< @brief CERR
     };
 
     /**
@@ -81,7 +81,7 @@ public:
         if( isConstructed() )
         {
             ::WORD wAttributes( lpConsoleScreenBufferInfo_.wAttributes );
-            if(type_ == Type::ERR)
+            if(type_ == Type::CERR)
             {
                 wAttributes = FOREGROUND_RED | FOREGROUND_INTENSITY;
             }
@@ -123,7 +123,7 @@ private:
                 break;
             }
             DWORD nStdHandle;
-            if(type_ == Type::OUT)
+            if(type_ == Type::COUT)
             {
                 nStdHandle = STD_OUTPUT_HANDLE;
             }

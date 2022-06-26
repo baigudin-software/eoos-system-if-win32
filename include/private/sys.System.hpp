@@ -173,12 +173,12 @@ private:
     /**
      * @brief The system output character stream.
      */
-    OutStreamChar cout_{OutStreamChar::Type::OUT};
+    OutStreamChar cout_{OutStreamChar::Type::COUT};
 
     /**
      * @brief The system error character stream.
      */
-    OutStreamChar cerr_{OutStreamChar::Type::ERR};
+    OutStreamChar cerr_{OutStreamChar::Type::CERR};
 
 };
 
