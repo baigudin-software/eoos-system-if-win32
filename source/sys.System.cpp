@@ -26,6 +26,8 @@ System::System()
 
 System::~System()
 {
+    cout_.flush();
+    cerr_.flush();
     eoos_ = NULLPTR;
 }
 
