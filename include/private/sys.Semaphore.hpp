@@ -7,7 +7,7 @@
 #define SYS_SEMAPHORE_HPP_
 
 #include "sys.NonCopyable.hpp"
-#include "api.SysSemaphore.hpp"
+#include "api.Semaphore.hpp"
 
 namespace eoos
 {
