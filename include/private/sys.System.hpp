@@ -125,7 +125,7 @@ private:
      */
     System& operator=(System&&) noexcept = delete;
     
-    #ifdef EOOS_NO_STRICT_MISRA_RULES
+    #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
     /**
      * @brief Operator new.
@@ -146,7 +146,7 @@ private:
      */
     static void operator delete(void*);
 
-    #endif // EOOS_NO_STRICT_MISRA_RULES
+    #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
     
     /**
      * @brief Terminates the system execution.

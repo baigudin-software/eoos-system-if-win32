@@ -15,7 +15,7 @@ namespace sys
     
 /**
  * @class Call
- * @brief System calls class of the operating system.
+ * @brief System calls of the operating system.
  */
 class Call
 {
