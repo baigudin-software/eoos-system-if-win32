@@ -142,7 +142,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    Mutex& operator=(Mutex&&) noexcept = delete;        
+    Mutex& operator=(Mutex&&) & noexcept = delete;        
 
     /**
      * @brief Windows critical section object.

@@ -156,7 +156,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    Semaphore& operator=(Semaphore&&) noexcept = delete;        
+    Semaphore& operator=(Semaphore&&) & noexcept = delete;        
     
     /**
      * @brief Releases the given number of permits.

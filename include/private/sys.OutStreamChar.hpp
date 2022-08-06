@@ -171,7 +171,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    OutStreamChar& operator=(OutStreamChar&&) noexcept = delete;
+    OutStreamChar& operator=(OutStreamChar&&) & noexcept = delete;
     
     /**
      * @brief Type of stream.

@@ -123,7 +123,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    System& operator=(System&&) noexcept = delete;
+    System& operator=(System&&) & noexcept = delete;
     
     #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 

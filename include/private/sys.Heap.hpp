@@ -116,7 +116,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    Heap& operator=(Heap&&) noexcept = delete;        
+    Heap& operator=(Heap&&) & noexcept = delete;        
 
 };
 

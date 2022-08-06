@@ -267,7 +267,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    Thread& operator=(Thread&&) noexcept = delete;    
+    Thread& operator=(Thread&&) & noexcept = delete;    
     
     /**
      * @brief The thread is created in a suspended state, and does not run until the ResumeThread function is called.

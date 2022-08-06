@@ -53,7 +53,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    NonCopyable& operator=(NonCopyable&&) noexcept = delete;
+    NonCopyable& operator=(NonCopyable&&) & noexcept = delete;
 
 };
 

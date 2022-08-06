@@ -81,7 +81,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    Scheduler& operator=(Scheduler&&) noexcept = delete;    
+    Scheduler& operator=(Scheduler&&) & noexcept = delete;    
     
     /**
      * @brief A Windows handle of root application process.
