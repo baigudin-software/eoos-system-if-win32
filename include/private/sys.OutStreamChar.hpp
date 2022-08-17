@@ -83,7 +83,10 @@ public:
             ::WORD wAttributes( lpConsoleScreenBufferInfo_.wAttributes );
             if(type_ == Type::CERR)
             {
-                wAttributes = FOREGROUND_RED | FOREGROUND_INTENSITY;
+                ::WORD wForegroundMask( FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY );
+                wForegroundMask = ~wForegroundMask;
+                wAttributes &= wForegroundMask;
+                wAttributes |= FOREGROUND_RED | FOREGROUND_INTENSITY;
             }
             static_cast<void>( ::SetConsoleTextAttribute(handle_, wAttributes) );
             ::DWORD numberOfCharsToWrite( static_cast< ::DWORD >( lib::Memory::strlen(source)) );
