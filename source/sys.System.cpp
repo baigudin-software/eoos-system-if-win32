@@ -112,25 +112,37 @@ api::Semaphore* System::createSemaphore(int32_t permits) try
 
 int32_t System::execute() ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
 {
-    return execute(0, NULLPTR);
+    char_t* args[] = {NULLPTR};    
+    return execute(0, args);
 }
 
 int32_t System::execute(int32_t argc, char_t* argv[])
 {
-    int32_t error;
-    if( !isConstructed() )
+    int32_t error( static_cast<int32_t>(Error::OK) );
+    if( isConstructed() && (argc >= 0) )
     {
-        error = static_cast<int32_t>(Error::UNDEFINED);
+        lib::LinkedList<char_t*> args;
+        for(int32_t i(0); i<argc; i++)
+        {
+            if(argv[i] == NULLPTR)
+            {
+                error = static_cast<int32_t>(Error::ARGUMENT);
+                break;
+            }
+            args.add(argv[i]);
+        }
+        if( (error != static_cast<int32_t>(Error::ARGUMENT) ) && (argv[argc] != NULLPTR) )
+        {
+            error = static_cast<int32_t>(Error::ARGUMENT);
+        }
+        if( error != static_cast<int32_t>(Error::ARGUMENT) )
+        {
+            error = Program::start(args);
+        }
     }
     else
     {
-        lib::LinkedList<char_t*> args;
-        args.setIllegal("");
-        for(int32_t i(0); i<argc; i++)
-        {
-            args.add(argv[i]);
-        }
-        error = Program::start(args);
+        error = static_cast<int32_t>(Error::ARGUMENT);
     }
     return error;
 }
@@ -144,20 +156,6 @@ api::System& System::getSystem()
     return *eoos_;
 }
 
-#ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
-
-void* System::operator new(size_t) noexcept
-{
-    return NULLPTR;
-}
-
-void System::operator delete(void*) 
-{
-}
-
-#endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
-
-
 void System::exit(Error const error)
 {
     ::ExitProcess(static_cast< ::UINT >(error));
@@ -168,37 +166,36 @@ void System::exit(Error const error)
 
 bool_t System::construct()
 {
-    bool_t res{ isConstructed() };
-    while(res == true)
+    bool_t res( false );
+    do 
     {
+        if( !isConstructed() )
+        {
+            break;
+        }
         if( eoos_ != NULLPTR )
         {
-            res = false;
-            continue;
-        }
+            break;
+        }        
         if( !scheduler_.isConstructed() )
         {
-            res = false;
-            continue;
+            break;
         }
         if( !heap_.isConstructed() )
         {
-            res = false;
-            continue;
+            break;
         }
         if( !cout_.isConstructed() )
         {
-            res = false;
-            continue;
+            break;
         }
         if( !cerr_.isConstructed() )
         {
-            res = false;
-            continue;
+            break;
         }
         eoos_ = this;
-        break;
-    }
+        res = true;
+    } while(false);    
     return res;
 }
 

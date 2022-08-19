@@ -147,12 +147,12 @@ private:
     /**
      * @brief Windows critical section object.
      */    
-	::CRITICAL_SECTION cs_{};    
+    ::CRITICAL_SECTION cs_{};    
 
     /**
      * @brief Pointer to Windows critical section object.
      */    
-	::LPCRITICAL_SECTION const pcs_{ &cs_ };    
+    ::LPCRITICAL_SECTION const pcs_{ &cs_ };    
 
 };
 

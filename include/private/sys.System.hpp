@@ -9,6 +9,7 @@
 #include "sys.NonCopyable.hpp"
 #include "api.System.hpp"
 #include "sys.Scheduler.hpp"
+#include "sys.Configuration.hpp"
 #include "sys.Heap.hpp"
 #include "sys.OutStreamChar.hpp"
 #include "sys.Error.hpp"
@@ -125,29 +126,6 @@ private:
      */
     System& operator=(System&&) & noexcept = delete;
     
-    #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
-
-    /**
-     * @brief Operator new.
-     *
-     * @note Prohibited to be called as no system heap is initialized till the operation.
-     *
-     * @param size A number of bytes to allocate.
-     * @return Allocated memory address or a null pointer.
-     */
-    static void* operator new(size_t) noexcept;
-
-    /**
-     * @brief Operator delete.
-     *
-     * @note Prohibited to be called as no system heap is initialized till the operation.
-     *
-     * @param ptr An address of allocated memory block or a null pointer.
-     */
-    static void operator delete(void*);
-
-    #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
-    
     /**
      * @brief Terminates the system execution.
      *
@@ -159,6 +137,11 @@ private:
      * @brief The operating system.
      */
     static api::System* eoos_;
+
+    /**
+     * @brief The operating system scheduler.
+     */
+    Configuration configuration_{};
 
     /**
      * @brief The operating system scheduler.

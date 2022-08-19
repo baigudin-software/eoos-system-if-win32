@@ -25,27 +25,32 @@ enum class Error : int32_t
     /**
      * @brief Error of the operating system kernel syscall calling.
      */
-    SYSCALL_CALLED = 1,
+    SYSCALL_CALLED = -1,
 
     /**
      * @brief Error of the OS termination.
      */
-    SYSTEM_ABORT = 2,
+    SYSTEM_ABORT = -2,
 
     /**
      * @brief Error of a user program occurred.
      */
-    USER_ABORT = 3,
+    USER_ABORT = -3,
 
     /**
      * @brief Error of searching of a resource.
      */
-    RESOURCE_NOT_FOUND = 4,
+    RESOURCE_NOT_FOUND = -4,
+
+    /**
+     * @brief Error of a function argument.
+     */
+    ARGUMENT = -5,
 
     /**
      * @brief An undefined error has been occurred.
      */
-    UNDEFINED = 127,
+    UNDEFINED = -127,
 
     /**
      * @brief The last unused error code.
