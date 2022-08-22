@@ -19,10 +19,10 @@
  * @param argv An array of c-string of arguments where the last one - argc + 1 is null. 
  * @return error code or zero.
  */
-int main(int const argc, char** const argv) try
+int main(int argc, char** argv) try ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
 {
     ::eoos::sys::System eoos;
-    ::eoos::int32_t const error{ eoos.execute(argc, argv) };
+    ::eoos::int32_t const error{ eoos.execute(static_cast<eoos::int32_t>(argc), argv) };
     return static_cast<int>(error); ///< SCA AUTOSAR-C++14 Justified Rule A3-9-1
 } 
 catch (...) 

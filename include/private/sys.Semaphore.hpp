@@ -165,7 +165,7 @@ private:
      *
      * @param permits The number of permits to release.
      */
-    void release(int32_t permits) ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
+    void release(int32_t permits) const ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
     {
         ::LONG const lReleaseCount{ static_cast< ::LONG >(permits) };
         static_cast<void>( ::ReleaseSemaphore(handle_, lReleaseCount, NULL) );

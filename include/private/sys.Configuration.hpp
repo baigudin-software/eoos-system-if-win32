@@ -17,26 +17,46 @@ namespace sys
  * @struct Configuration
  * @brief The configuration of a target processor.
  */
-struct Configuration
+class Configuration final
 {
-    /** 
-     * Constructor.
-     */     
-    Configuration();
     
+public:
+
     #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
     /**
-     * @brief Size of heap memory in bytes.
+     * @brief Returns size of heap memory in bytes.
      */
-    size_t heapSize;
+    size_t getHeapSize() const
+    { 
+        return heapSize_;
+    }
 
     #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
     /**
      * @brief Stack size in bytes for the first user thread to be created.
      */
-    size_t stackSize;
+    size_t getStackSize() const
+    {
+        return stackSize_;
+    }
+    
+private:
+    
+    #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+
+    /**
+     * @brief Size of heap memory in bytes.
+     */
+    size_t heapSize_{ 0x00000000U };
+
+    #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+
+    /**
+     * @brief Stack size in bytes for the first user thread to be created.
+     */
+    size_t stackSize_{ 0x00000000U };
 
 };
 

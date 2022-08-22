@@ -44,7 +44,8 @@ public:
         : NonCopyable()
         , api::OutStream<char_t>()
         , type_( type ) 
-        , handle_( NULLPTR ) {
+        , handle_( NULLPTR )
+        , lpConsoleScreenBufferInfo_(){
         bool_t const isConstructed{ construct() };
         setConstructed( isConstructed );
     }
@@ -60,7 +61,7 @@ public:
             // The returned value is simply a copy of the value stored in the process table.
             // Moreover, closing the handle will lead to stop outputting if EOOS instance 
             // will be deleted and created again.
-            static_cast<void>( flush() );
+            flushStream();
             handle_ = NULLPTR;            
         }        
     }
@@ -90,7 +91,7 @@ public:
             }
             static_cast<void>( ::SetConsoleTextAttribute(handle_, wAttributes) );
             ::DWORD numberOfCharsToWrite( static_cast< ::DWORD >( lib::Memory::strlen(source)) );
-            ::DWORD numberOfCharsWritten;
+            ::DWORD numberOfCharsWritten; ///< SCA AUTOSAR-C++14 Justified Rule M0-1-4
             static_cast<void>( ::WriteConsoleA(handle_, source, numberOfCharsToWrite, &numberOfCharsWritten, NULL) );
             static_cast<void>( ::SetConsoleTextAttribute(handle_, lpConsoleScreenBufferInfo_.wAttributes) );
         }
@@ -104,7 +105,7 @@ public:
     {
         if( isConstructed() )
         {        
-            static_cast<void>( ::FlushConsoleInputBuffer(handle_) );
+            flushStream();
         }
         return *this;
     }
@@ -135,7 +136,7 @@ private:
                 nStdHandle = STD_ERROR_HANDLE;
             }
             handle_ = ::GetStdHandle(nStdHandle);
-            if( handle_ == INVALID_HANDLE_VALUE )
+            if( handle_ == INVALID_HANDLE_VALUE ) ///< SCA AUTOSAR-C++14 Justified Rule M5-2-8 and Rule A5-2-2
             {
                 break;
             }
@@ -155,6 +156,14 @@ private:
     } catch (...) {
         return false;
     }
+    
+    /**
+     * @brief Flushs stream.
+     */    
+    void flushStream() const noexcept
+    {
+        static_cast<void>( ::FlushConsoleInputBuffer(handle_) );
+    }    
     
     /**
      * @copydoc eoos::Object::Object(Object const&)

@@ -51,7 +51,7 @@ api::Heap& System::getHeap()
     {
         exit(Error::SYSCALL_CALLED);
     }
-    return heap_;
+    return heap_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::OutStream<char_t>& System::getOutStreamChar()
@@ -60,7 +60,7 @@ api::OutStream<char_t>& System::getOutStreamChar()
     {
         exit(Error::SYSCALL_CALLED);
     }
-    return cout_;
+    return cout_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::OutStream<char_t>& System::getErrorStreamChar()
@@ -69,7 +69,7 @@ api::OutStream<char_t>& System::getErrorStreamChar()
     {
         exit(Error::SYSCALL_CALLED);
     }
-    return cerr_;
+    return cerr_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::Mutex* System::createMutex() try
@@ -110,16 +110,16 @@ api::Semaphore* System::createSemaphore(int32_t permits) try
     return NULLPTR;
 }
 
-int32_t System::execute() ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
+int32_t System::execute() const ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
 {
-    char_t* args[] = {NULLPTR};    
-    return execute(0, args);
+    char_t* args[]{ NULLPTR };
+    return execute(0, args); ///< SCA AUTOSAR-C++14 Justified Rule A5-2-12
 }
 
-int32_t System::execute(int32_t argc, char_t* argv[])
+int32_t System::execute(int32_t argc, char_t* argv[]) const ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
 {
     int32_t error( static_cast<int32_t>(Error::OK) );
-    if( isConstructed() && (argc >= 0) )
+    if( isConstructed() && (argc >= 0) && (argv != NULLPTR) )
     {
         lib::LinkedList<char_t*> args;
         for(int32_t i(0); i<argc; i++)
@@ -167,7 +167,7 @@ void System::exit(Error const error)
 bool_t System::construct()
 {
     bool_t res( false );
-    do 
+    while(true) 
     {
         if( !isConstructed() )
         {
@@ -195,7 +195,8 @@ bool_t System::construct()
         }
         eoos_ = this;
         res = true;
-    } while(false);    
+        break;
+    }
     return res;
 }
 
