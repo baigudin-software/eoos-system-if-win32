@@ -124,12 +124,15 @@ int32_t System::execute(int32_t argc, char_t* argv[]) const ///< SCA AUTOSAR-C++
         lib::LinkedList<char_t*> args;
         for(int32_t i(0); i<argc; i++)
         {
-            if(argv[i] == NULLPTR)
+            if( argv[i] != NULLPTR )
             {
-                error = static_cast<int32_t>(Error::ARGUMENT);
-                break;
+                if( args.add(argv[i]) )
+                {
+                    continue;
+                }
             }
-            args.add(argv[i]);
+            error = static_cast<int32_t>(Error::ARGUMENT);
+            break;
         }
         if( (error != static_cast<int32_t>(Error::ARGUMENT) ) && (argv[argc] != NULLPTR) )
         {

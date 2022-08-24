@@ -14,7 +14,7 @@ namespace sys
 {
 
 /**
- * @struct Configuration
+ * @class Configuration
  * @brief The configuration of a target processor.
  */
 class Configuration final
