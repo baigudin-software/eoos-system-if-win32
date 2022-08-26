@@ -26,20 +26,20 @@ bool_t Scheduler::isConstructed() const
 
 api::Thread* Scheduler::createThread(api::Task& task) try ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
 {
-    if( !isConstructed() )
+    lib::UniquePointer<Thread> res;
+    if( isConstructed() )
     {
-        return NULLPTR;
-    }    
-    lib::UniquePointer<Thread> res{ new Thread(task) }; ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
-    if( !res.isNull() )
-    {
-        if( !res->isConstructed() )
+        res.reset( new Thread(task) ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
+        if( !res.isNull() )
         {
-            res.reset();
+            if( !res->isConstructed() )
+            {
+                res.reset();
+            }
         }
     }
     return res.release();
-} catch (...) {
+} catch (...) { ///< UT Justified Branch: OS dependency
     return NULLPTR;
 }
 
@@ -52,14 +52,14 @@ bool_t Scheduler::sleep(int32_t ms) try
         res = true;
     }
     return res;
-} catch (...) {
+} catch (...) { ///< UT Justified Branch: OS dependency
     return false;
 }
 
 void Scheduler::yield() try
 {
     ::Sleep(0U);
-} catch (...) {
+} catch (...) { ///< UT Justified Branch: OS dependency
     return;
 }
 
@@ -69,24 +69,24 @@ bool_t Scheduler::construct() try
     while(true)
     {
         if( !isConstructed() )
-        {
+        {   ///< UT Justified Branch: HW dependency
             break;
         }
         processHandle_ = ::GetCurrentProcess();
         if(processHandle_ == NULLPTR)
-        {
+        {   ///< UT Justified Branch: OS dependency
             break;
         }
         processPriority_ = ::GetPriorityClass(processHandle_);
         if(processPriority_ == 0U)
-        {
+        {   ///< UT Justified Branch: OS dependency
             break;
         }
         res = true;
         break;
     }
     return res;
-} catch (...) {
+} catch (...) { ///< UT Justified Branch: OS dependency
     return false;
 }
 

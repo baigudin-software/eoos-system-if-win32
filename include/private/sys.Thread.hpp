@@ -81,12 +81,12 @@ public:
                 res = true;
             }
             else
-            {
+            {   ///< UT Justified Branch: OS dependency
                 status_ = STATUS_DEAD;
             }
         }
         return res;
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         status_ = STATUS_DEAD;
         return false;
     }
@@ -104,7 +104,7 @@ public:
             status_ = STATUS_DEAD;
         }
         return res;
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return false;
     }
 
@@ -156,11 +156,11 @@ private:
         while(true)
         {
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 break;
             }
             if( task_ == NULLPTR )
-            {
+            {   ///< UT Justified Branch: OS dependency
                 break;
             }
             if( !task_->isConstructed() )
@@ -205,20 +205,20 @@ private:
                 lpThreadId
             ) };
             if(handle == NULLPTR)
-            {
+            {   ///< UT Justified Branch: OS dependency
                 break;
             }
             status_ = STATUS_NEW;
             handle_ = handle;
             res = true;
             break;
-        }
+        } ///< UT Justified Line: Compiler dependency
         if( res == false )
         {
             status_ = STATUS_DEAD;
         }
         return res;    
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return false;
     }
 
@@ -245,7 +245,7 @@ private:
             }
         }        
         return static_cast< ::DWORD >(error);
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return static_cast< ::DWORD >(-1);
     }
     

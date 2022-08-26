@@ -61,7 +61,7 @@ public:
             res = ::TryEnterCriticalSection(pcs_) != 0;
         }
         return res;
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return false;
     }    
 
@@ -77,7 +77,7 @@ public:
             res = true;
         }
         return res;
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return false;
     }
 
@@ -90,7 +90,7 @@ public:
         {
             ::LeaveCriticalSection(pcs_);
         }
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return;
     }
 
@@ -107,20 +107,20 @@ private:
         while(true)
         {   
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 break;
             }
             ::DWORD const spinCount{ 4000U };
             ::BOOL const isInitialize{ ::InitializeCriticalSectionAndSpinCount(pcs_, spinCount) };
             if(isInitialize == 0)
-            {
+            {   ///< UT Justified Branch: OS dependency
                 break;
             }
             res = true;
             break;
         }
         return res;
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return false;
     }
     

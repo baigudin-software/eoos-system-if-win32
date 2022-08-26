@@ -123,7 +123,7 @@ private:
         while(true)
         {   
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 break;
             }
             DWORD nStdHandle;
@@ -137,23 +137,23 @@ private:
             }
             handle_ = ::GetStdHandle(nStdHandle);
             if( handle_ == INVALID_HANDLE_VALUE ) ///< SCA AUTOSAR-C++14 Justified Rule M5-2-8 and Rule A5-2-2
-            {
+            {   ///< UT Justified Branch: OS dependency
                 break;
             }
             // Don't check on NULL here as:
             // If an application does not have associated standard handles, such as a service running 
             // on an interactive desktop, and has not redirected them, the return value is NULL.
             // Thus, if an output handle is not exist, will flush the stream nowhere.
-            ::BOOL isGot( GetConsoleScreenBufferInfo(handle_, &lpConsoleScreenBufferInfo_) );
+            ::BOOL isGot( ::GetConsoleScreenBufferInfo(handle_, &lpConsoleScreenBufferInfo_) );
             if( isGot == 0 )
-            {
+            {   ///< UT Justified Branch: OS dependency
                 break;
             }
             res = true;
             break;
-        }
+        } ///< UT Justified Line: Compiler dependency
         return res;
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return false;
     }
     

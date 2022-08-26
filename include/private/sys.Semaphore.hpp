@@ -69,7 +69,7 @@ public:
             res = ( error == static_cast< ::DWORD >(WAIT_OBJECT_0) );
         }
         return res;
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return false;
     }
 
@@ -82,7 +82,7 @@ public:
         {
             release(1);
         }
-    } catch (...) {
+    } catch (...) { ///< UT Justified Branch: OS dependency
         return;
     }
 
@@ -101,7 +101,7 @@ private:
         while(true)
         {
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 break;
             }
             if( permits < 0 )
@@ -112,7 +112,7 @@ private:
             // if the maximum would be changed, the values are explicitly casted to int64_t.
             // Thus, if MAXIMUM_COUNT would be less than 0x7FFFFFFF, we have to cast to int32_t back.
             if( static_cast<int64_t>(permits) > static_cast<int64_t>(MAXIMUM_COUNT) )
-            {
+            {   ///< UT Justified Branch: SCA dependency
                 break;
             }            
             ::LPSECURITY_ATTRIBUTES const lpSemaphoreAttributes{ NULL };
@@ -126,15 +126,15 @@ private:
                 lpName
             ) };
             if(handle == NULLPTR)
-            {
+            {   ///< UT Justified Branch: OS dependency
                 break;
             }
             handle_ = handle;
             res = true;
             break;
-        }
+        } ///< UT Justified Line: Compiler dependency
         return res;
-    }  catch (...) {
+    }  catch (...) { ///< UT Justified Branch: OS dependency
         return false;
     }
 

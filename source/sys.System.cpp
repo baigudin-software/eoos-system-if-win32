@@ -39,7 +39,7 @@ bool_t System::isConstructed() const
 api::Scheduler& System::getScheduler()
 {
     if( !isConstructed() )
-    {
+    {   ///< UT Justified Branch: HW dependency
         exit(Error::SYSCALL_CALLED);
     }
     return scheduler_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
@@ -48,7 +48,7 @@ api::Scheduler& System::getScheduler()
 api::Heap& System::getHeap()
 {
     if( !isConstructed() )
-    {
+    {   ///< UT Justified Branch: HW dependency
         exit(Error::SYSCALL_CALLED);
     }
     return heap_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
@@ -57,7 +57,7 @@ api::Heap& System::getHeap()
 api::OutStream<char_t>& System::getOutStreamChar()
 {
     if( !isConstructed() )
-    {
+    {   ///< UT Justified Branch: HW dependency
         exit(Error::SYSCALL_CALLED);
     }
     return cout_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
@@ -66,7 +66,7 @@ api::OutStream<char_t>& System::getOutStreamChar()
 api::OutStream<char_t>& System::getErrorStreamChar()
 {
     if( !isConstructed() )
-    {
+    {   ///< UT Justified Branch: HW dependency
         exit(Error::SYSCALL_CALLED);
     }
     return cerr_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
@@ -74,39 +74,39 @@ api::OutStream<char_t>& System::getErrorStreamChar()
 
 api::Mutex* System::createMutex() try
 {
-    if( !isConstructed() )
-    {
-        return NULLPTR;
-    }    
-    lib::UniquePointer<api::Mutex> res{ new Mutex() }; ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
-    if( !res.isNull() )
-    {
-        if( !res->isConstructed() )
+    lib::UniquePointer<api::Mutex> res;
+    if( isConstructed() )
+    {   
+        res.reset( new Mutex() ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
+        if( !res.isNull() )
         {
-            res.reset();
+            if( !res->isConstructed() )
+            {   ///< UT Justified Branch: HW dependency
+                res.reset();
+            }
         }
     }
     return res.release();
-} catch (...) {
+} catch (...) { ///< UT Justified Branch: OS dependency
     return NULLPTR;
 }
 
 api::Semaphore* System::createSemaphore(int32_t permits) try
 {
-    if( !isConstructed() )
+    lib::UniquePointer<api::Semaphore> res;
+    if( isConstructed() )
     {
-        return NULLPTR;
-    }
-    lib::UniquePointer<api::Semaphore> res{ new Semaphore(permits) }; ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
-    if( !res.isNull() )
-    {
-        if( !res->isConstructed() )
-        {
-            res.reset();
+        res.reset( new Semaphore(permits) ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
+        if( !res.isNull() )
+        {   ///< UT Justified Branch: HW dependency
+            if( !res->isConstructed() )
+            {
+                res.reset();
+            }
         }
     }
     return res.release();
-} catch (...) {
+} catch (...) { ///< UT Justified Branch: OS dependency
     return NULLPTR;
 }
 
@@ -133,7 +133,7 @@ int32_t System::execute(int32_t argc, char_t* argv[]) const ///< SCA AUTOSAR-C++
             }
             error = static_cast<int32_t>(Error::ARGUMENT);
             break;
-        }
+        } ///< UT Justified Line: Compiler dependency
         if( (error != static_cast<int32_t>(Error::ARGUMENT) ) && (argv[argc] != NULLPTR) )
         {
             error = static_cast<int32_t>(Error::ARGUMENT);
@@ -153,13 +153,13 @@ int32_t System::execute(int32_t argc, char_t* argv[]) const ///< SCA AUTOSAR-C++
 api::System& System::getSystem()
 {
     if(eoos_ == NULLPTR)
-    {
+    {   ///< UT Justified Branch: Startup dependency
         exit(Error::SYSCALL_CALLED);
     }
     return *eoos_;
 }
 
-void System::exit(Error const error)
+void System::exit(Error const error) ///< UT Justified Branch: OS dependency
 {
     ::ExitProcess(static_cast< ::UINT >(error));
     // This code must NOT be executed
@@ -173,33 +173,33 @@ bool_t System::construct()
     while(true) 
     {
         if( !isConstructed() )
-        {
+        {   ///< UT Justified Branch: HW dependency
             break;
         }
         if( eoos_ != NULLPTR )
-        {
+        {   ///< UT Justified Branch: Startup dependency
             break;
         }        
         if( !scheduler_.isConstructed() )
-        {
+        {   ///< UT Justified Branch: HW dependency
             break;
         }
         if( !heap_.isConstructed() )
-        {
+        {   ///< UT Justified Branch: HW dependency
             break;
         }
         if( !cout_.isConstructed() )
-        {
+        {   ///< UT Justified Branch: HW dependency
             break;
         }
         if( !cerr_.isConstructed() )
-        {
+        {   ///< UT Justified Branch: HW dependency
             break;
         }
         eoos_ = this;
         res = true;
         break;
-    }
+    } ///< UT Justified Line: Compiler dependency
     return res;
 }
 

@@ -84,14 +84,9 @@ private:
     bool_t construct() const noexcept
     {
         bool_t res{ false };
-        while(true)
-        {   
-            if( !isConstructed() )
-            {
-                break;
-            }
+        if( isConstructed() )
+        {
             res = true;
-            break;
         }
         return res;
     }
