@@ -22,7 +22,7 @@ class Configuration final
     
 public:
 
-    #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+    #ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
 
     /**
      * @brief Returns size of heap memory in bytes.
@@ -32,7 +32,7 @@ public:
         return heapSize_;
     }
 
-    #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+    #endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
     /**
      * @brief Stack size in bytes for the first user thread to be created.
@@ -44,14 +44,14 @@ public:
     
 private:
     
-    #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+    #ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
 
     /**
      * @brief Size of heap memory in bytes.
      */
     size_t heapSize_{ 0x00000000U };
 
-    #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+    #endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
     /**
      * @brief Stack size in bytes for the first user thread to be created.
