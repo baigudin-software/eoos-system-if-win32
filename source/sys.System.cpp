@@ -4,7 +4,6 @@
  * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
 #include "sys.System.hpp"
-#include "sys.Mutex.hpp"
 #include "sys.Semaphore.hpp"
 #include "Program.hpp"
 #include "lib.LinkedList.hpp"
@@ -72,23 +71,13 @@ api::OutStream<char_t>& System::getErrorStreamChar()
     return cerr_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-api::Mutex* System::createMutex() try
+api::SystemMutex& System::getSystemMutex()
 {
-    lib::UniquePointer<api::Mutex> res;
-    if( isConstructed() )
-    {   
-        res.reset( new Mutex() ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
-        if( !res.isNull() )
-        {
-            if( !res->isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                res.reset();
-            }
-        }
+    if( !isConstructed() )
+    {   ///< UT Justified Branch: HW dependency
+        exit(Error::SYSCALL_CALLED);
     }
-    return res.release();
-} catch (...) { ///< UT Justified Branch: OS dependency
-    return NULLPTR;
+    return mutex_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::Semaphore* System::createSemaphore(int32_t permits) try

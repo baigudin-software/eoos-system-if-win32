@@ -1,7 +1,7 @@
 /**
  * @file      sys.System.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2023, Sergey Baigudin, Baigudin Software
  */
 #ifndef SYS_SYSTEM_HPP_
 #define SYS_SYSTEM_HPP_
@@ -9,7 +9,7 @@
 #include "sys.NonCopyable.hpp"
 #include "api.System.hpp"
 #include "sys.Scheduler.hpp"
-#include "sys.Configuration.hpp"
+#include "sys.SystemMutex.hpp"	
 #include "sys.Heap.hpp"
 #include "sys.OutStreamChar.hpp"
 #include "sys.Error.hpp"
@@ -63,11 +63,11 @@ public:
      * @copydoc eoos::api::System::getErrorStreamChar()
      */    
     api::OutStream<char_t>& getErrorStreamChar() override;
-
+	
     /**
-     * @copydoc eoos::api::System::createMutex()
+     * @copydoc eoos::api::System::getSystemMutex()
      */
-    api::Mutex* createMutex() override;
+    api::SystemMutex& getSystemMutex() override;	
 
     /**
      * @copydoc eoos::api::System::creatSemaphore(int32_t)
@@ -141,12 +141,12 @@ private:
     /**
      * @brief The operating system scheduler.
      */
-    Configuration configuration_{};
-
+    mutable Scheduler scheduler_{};
+	
     /**
      * @brief The operating system scheduler.
      */
-    mutable Scheduler scheduler_{};
+    mutable SystemMutex mutex_{};
     
     /**
      * @brief The system heap.
