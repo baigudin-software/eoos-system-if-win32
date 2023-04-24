@@ -9,9 +9,10 @@
 #include "sys.NonCopyable.hpp"
 #include "api.System.hpp"
 #include "sys.Scheduler.hpp"
-#include "sys.SystemMutex.hpp"	
+#include "sys.MutexManager.hpp"	
+#include "sys.SemaphoreManager.hpp"
+#include "sys.StreamManager.hpp"
 #include "sys.Heap.hpp"
-#include "sys.OutStreamChar.hpp"
 #include "sys.Error.hpp"
 
 namespace eoos
@@ -55,24 +56,34 @@ public:
     api::Heap& getHeap() override;
     
     /**
-     * @copydoc eoos::api::System::getOutStreamChar()
-     */    
-    api::OutStream<char_t>& getOutStreamChar() override;
-
-    /**
-     * @copydoc eoos::api::System::getErrorStreamChar()
-     */    
-    api::OutStream<char_t>& getErrorStreamChar() override;
+     * @copydoc eoos::api::System::hasMutexManager()
+     */
+    bool_t hasMutexManager() override;
 	
     /**
-     * @copydoc eoos::api::System::getSystemMutex()
+     * @copydoc eoos::api::System::getMutexManager()
      */
-    api::SystemMutex& getSystemMutex() override;	
+    api::MutexManager& getMutexManager() override;
 
     /**
-     * @copydoc eoos::api::System::creatSemaphore(int32_t)
+     * @copydoc eoos::api::System::hasSemaphoreManager()
      */
-    api::Semaphore* createSemaphore(int32_t permits) override;
+    bool_t hasSemaphoreManager() override;
+	
+    /**
+     * @copydoc eoos::api::System::getSemaphoreManager()
+     */
+    api::SemaphoreManager& getSemaphoreManager() override;
+    
+    /**
+     * @copydoc eoos::api::System::hasStreamManager()
+     */
+    bool_t hasStreamManager() override;
+	
+    /**
+     * @copydoc eoos::api::System::getStreamManager()
+     */
+    api::StreamManager& getStreamManager() override;
 
     /**
      * @brief Executes the operating system.
@@ -124,15 +135,15 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    System& operator=(System&&) & noexcept = delete;
+    System& operator=(System&&) & noexcept = delete;    
     
     /**
      * @brief Terminates the system execution.
      *
      * @param Error an exit code.
      */
-    static void exit(Error error);    
-    
+    static void exit(Error error);
+
     /**
      * @brief The operating system.
      */
@@ -144,24 +155,24 @@ private:
     mutable Scheduler scheduler_{};
 	
     /**
-     * @brief The operating system scheduler.
+     * @brief The mutex sub-system manager.
      */
-    mutable SystemMutex mutex_{};
+    mutable MutexManager mutex_{};
+
+    /**
+     * @brief The semaphore sub-system manager.
+     */
+    mutable SemaphoreManager semaphore_{};
+    
+    /**
+     * @brief The stream sub-system manager.
+     */
+    mutable StreamManager stream_{};
     
     /**
      * @brief The system heap.
      */
-    mutable Heap heap_{}; 
-
-    /**
-     * @brief The system output character stream.
-     */
-    OutStreamChar cout_{OutStreamChar::Type::COUT};
-
-    /**
-     * @brief The system error character stream.
-     */
-    OutStreamChar cerr_{OutStreamChar::Type::CERR};
+    mutable Heap heap_{};
 
 };
 

@@ -1,14 +1,14 @@
 /**
- * @file      sys.SystemMutex.hpp
+ * @file      sys.SemaphoreManager.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2023, Sergey Baigudin, Baigudin Software
  */
-#ifndef SYS_SYSTEMMUTEX_HPP_
-#define SYS_SYSTEMMUTEX_HPP_
+#ifndef SYS_SEMAPHOREMANAGER_HPP_
+#define SYS_SEMAPHOREMANAGER_HPP_
 
 #include "sys.NonCopyable.hpp"
-#include "api.SystemMutex.hpp"
-#include "sys.Mutex.hpp"
+#include "api.SemaphoreManager.hpp"
+#include "sys.Semaphore.hpp"
 #include "lib.UniquePointer.hpp"
 
 namespace eoos
@@ -17,10 +17,10 @@ namespace sys
 {
 
 /**
- * @class SystemMutex.
- * @brief Mutex sub-system.
+ * @class SemaphoreManager.
+ * @brief Semaphore sub-system manager.
  */
-class SystemMutex : public NonCopyable, public api::SystemMutex
+class SemaphoreManager : public NonCopyable, public api::SemaphoreManager
 {
     using Parent = NonCopyable;
 
@@ -29,16 +29,16 @@ public:
     /**
      * @brief Constructor.
      */
-    SystemMutex() noexcept 
+    SemaphoreManager() noexcept 
         : NonCopyable()
-        , api::SystemMutex() {
+        , api::SemaphoreManager() {
         setConstructed( true );
     }
 
     /**
      * @brief Destructor.
      */
-    ~SystemMutex() noexcept override
+    ~SemaphoreManager() noexcept override
     {
     }
 
@@ -51,18 +51,18 @@ public:
     }    
 
     /**
-     * @copydoc eoos::api::SystemMutex::create()
+     * @copydoc eoos::api::SemaphoreManager::create()
      */
-    api::Mutex* create() override try
+    api::Semaphore* create(int32_t permits) override try
     {
-        lib::UniquePointer<api::Mutex> res;
+        lib::UniquePointer<api::Semaphore> res;
         if( isConstructed() )
-        {   
-            res.reset( new Mutex() ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
+        {
+            res.reset( new Semaphore(permits) ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
             if( !res.isNull() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 if( !res->isConstructed() )
-                {   ///< UT Justified Branch: HW dependency
+                {
                     res.reset();
                 }
             }
@@ -73,13 +73,13 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::SystemMutex::remove()
+     * @copydoc eoos::api::SemaphoreManager::remove()
      */
-    void remove(api::Mutex* mutex) override
+    void remove(api::Semaphore* semaphore) override
     {
-        if( isConstructed() && mutex != NULLPTR )
+        if( isConstructed() && semaphore != NULLPTR )
         {
-            delete mutex;
+            delete semaphore;
         }
     }
 
@@ -88,25 +88,25 @@ private:
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    SystemMutex(SystemMutex const&) noexcept = delete;
+    SemaphoreManager(SemaphoreManager const&) noexcept = delete;
     
     /**
      * @copydoc eoos::Object::operator=(Object const&)
      */       
-    SystemMutex& operator=(SystemMutex const&) noexcept = delete;   
+    SemaphoreManager& operator=(SemaphoreManager const&) noexcept = delete;   
 
     /**
      * @copydoc eoos::Object::Object(Object&&)
      */       
-    SystemMutex(SystemMutex&&) noexcept = delete;
+    SemaphoreManager(SemaphoreManager&&) noexcept = delete;
     
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    SystemMutex& operator=(SystemMutex&&) & noexcept = delete;        
+    SemaphoreManager& operator=(SemaphoreManager&&) & noexcept = delete;        
 
 };
 
 } // namespace sys
 } // namespace eoos
-#endif // SYS_SYSTEMMUTEX_HPP_
+#endif // SYS_SEMAPHOREMANAGER_HPP_

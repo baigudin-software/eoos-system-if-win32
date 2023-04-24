@@ -1,13 +1,11 @@
 /**
  * @file      sys.System.cpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2023, Sergey Baigudin, Baigudin Software
  */
 #include "sys.System.hpp"
-#include "sys.Semaphore.hpp"
 #include "Program.hpp"
 #include "lib.LinkedList.hpp"
-#include "lib.UniquePointer.hpp"
 
 namespace eoos
 {
@@ -25,8 +23,6 @@ System::System()
 
 System::~System()
 {
-    cout_.flush();
-    cerr_.flush();
     eoos_ = NULLPTR;
 }
 
@@ -53,25 +49,17 @@ api::Heap& System::getHeap()
     return heap_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-api::OutStream<char_t>& System::getOutStreamChar()
+bool_t System::hasMutexManager()
 {
+    bool_t res{ true };
     if( !isConstructed() )
-    {   ///< UT Justified Branch: HW dependency
-        exit(Error::SYSCALL_CALLED);
+    {
+        res = false;
     }
-    return cout_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
+    return res;
 }
 
-api::OutStream<char_t>& System::getErrorStreamChar()
-{
-    if( !isConstructed() )
-    {   ///< UT Justified Branch: HW dependency
-        exit(Error::SYSCALL_CALLED);
-    }
-    return cerr_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
-}
-
-api::SystemMutex& System::getSystemMutex()
+api::MutexManager& System::getMutexManager()
 {
     if( !isConstructed() )
     {   ///< UT Justified Branch: HW dependency
@@ -80,23 +68,42 @@ api::SystemMutex& System::getSystemMutex()
     return mutex_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-api::Semaphore* System::createSemaphore(int32_t permits) try
+bool_t System::hasSemaphoreManager()
 {
-    lib::UniquePointer<api::Semaphore> res;
-    if( isConstructed() )
+    bool_t res{ true };
+    if( !isConstructed() )
     {
-        res.reset( new Semaphore(permits) ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
-        if( !res.isNull() )
-        {   ///< UT Justified Branch: HW dependency
-            if( !res->isConstructed() )
-            {
-                res.reset();
-            }
-        }
+        res = false;
     }
-    return res.release();
-} catch (...) { ///< UT Justified Branch: OS dependency
-    return NULLPTR;
+    return res;
+}
+
+api::SemaphoreManager& System::getSemaphoreManager()
+{
+    if( !isConstructed() )
+    {   ///< UT Justified Branch: HW dependency
+        exit(Error::SYSCALL_CALLED);
+    }
+    return semaphore_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
+}
+
+bool_t System::hasStreamManager()
+{
+    bool_t res{ true };
+    if( !isConstructed() )
+    {
+        res = false;
+    }
+    return res;
+}
+
+api::StreamManager& System::getStreamManager()
+{
+    if( !isConstructed() )
+    {   ///< UT Justified Branch: HW dependency
+        exit(Error::SYSCALL_CALLED);
+    }
+    return stream_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1    
 }
 
 int32_t System::execute() const ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
@@ -177,14 +184,18 @@ bool_t System::construct()
         {   ///< UT Justified Branch: HW dependency
             break;
         }
-        if( !cout_.isConstructed() )
+        if( !mutex_.isConstructed() )
         {   ///< UT Justified Branch: HW dependency
             break;
         }
-        if( !cerr_.isConstructed() )
+        if( !semaphore_.isConstructed() )
         {   ///< UT Justified Branch: HW dependency
             break;
         }
+        if( !stream_.isConstructed() )
+        {   ///< UT Justified Branch: HW dependency
+            break;
+        }        
         eoos_ = this;
         res = true;
         break;
