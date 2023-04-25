@@ -31,15 +31,6 @@ bool_t System::isConstructed() const
     return Parent::isConstructed();
 }
 
-api::Scheduler& System::getScheduler()
-{
-    if( !isConstructed() )
-    {   ///< UT Justified Branch: HW dependency
-        exit(Error::SYSCALL_CALLED);
-    }
-    return scheduler_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
-}
-
 api::Heap& System::getHeap()
 {
     if( !isConstructed() )
@@ -47,6 +38,15 @@ api::Heap& System::getHeap()
         exit(Error::SYSCALL_CALLED);
     }
     return heap_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
+}
+
+api::Scheduler& System::getScheduler()
+{
+    if( !isConstructed() )
+    {   ///< UT Justified Branch: HW dependency
+        exit(Error::SYSCALL_CALLED);
+    }
+    return scheduler_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 bool_t System::hasMutexManager()

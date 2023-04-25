@@ -54,7 +54,7 @@ public:
     /**
      * @copydoc eoos::api::StreamManager::getCout()
      */    
-    api::OutStream<char_t>& getCout()
+    api::OutStream<char_t>& getCout() override
     {
         return cout_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
     }
@@ -62,7 +62,7 @@ public:
     /**
      * @copydoc eoos::api::StreamManager::getCerr()
      */
-    api::OutStream<char_t>& getCerr()
+    api::OutStream<char_t>& getCerr() override
     {
         return cerr_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
     }    

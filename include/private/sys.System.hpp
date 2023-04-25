@@ -44,16 +44,16 @@ public:
      * @copydoc eoos::api::Object::isConstructed()
      */
     bool_t isConstructed() const override; ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
-
-    /**
-     * @copydoc eoos::api::System::getScheduler()
-     */
-    api::Scheduler& getScheduler() override;
     
     /**
      * @copydoc eoos::api::System::getHeap()
      */
     api::Heap& getHeap() override;
+
+    /**
+     * @copydoc eoos::api::System::getScheduler()
+     */
+    api::Scheduler& getScheduler() override;    
     
     /**
      * @copydoc eoos::api::System::hasMutexManager()
@@ -150,6 +150,11 @@ private:
     static api::System* eoos_;
 
     /**
+     * @brief The system heap.
+     */
+    mutable Heap heap_{};    
+
+    /**
      * @brief The operating system scheduler.
      */
     mutable Scheduler scheduler_{};
@@ -168,11 +173,6 @@ private:
      * @brief The stream sub-system manager.
      */
     mutable StreamManager stream_{};
-    
-    /**
-     * @brief The system heap.
-     */
-    mutable Heap heap_{};
 
 };
 
