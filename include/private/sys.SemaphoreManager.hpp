@@ -45,7 +45,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override
+    bool_t isConstructed() const noexcept override
     {
         return Parent::isConstructed();
     }    
@@ -53,7 +53,7 @@ public:
     /**
      * @copydoc eoos::api::SemaphoreManager::create()
      */
-    api::Semaphore* create(int32_t permits) override try
+    api::Semaphore* create(int32_t permits) noexcept override try
     {
         lib::UniquePointer<api::Semaphore> res;
         if( isConstructed() )
@@ -75,7 +75,7 @@ public:
     /**
      * @copydoc eoos::api::SemaphoreManager::remove()
      */
-    void remove(api::Semaphore* semaphore) override
+    void remove(api::Semaphore* semaphore) noexcept override
     {
         if( isConstructed() && semaphore != NULLPTR )
         {

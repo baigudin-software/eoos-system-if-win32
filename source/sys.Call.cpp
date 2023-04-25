@@ -11,7 +11,7 @@ namespace eoos
 namespace sys
 {
 
-api::System& Call::get()
+api::System& Call::get() noexcept
 {
     return System::getSystem();
 }

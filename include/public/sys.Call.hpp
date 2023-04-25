@@ -27,7 +27,7 @@ public:
      *
      * @return The operating system syscall interface.
      */
-    static api::System& get();
+    static api::System& get() noexcept;
 
 };
 

@@ -11,12 +11,31 @@
 #include "lib.Types.hpp"
 #include "sys.Win32.hpp"
 
+#if EOOS_CPP_STANDARD >= 2011 && defined (EOOS_CPP_NOTHROW)
+#include <new>
+#endif // EOOS_CPP_STANDARD >= 2011
+
 namespace eoos
 {
 namespace sys
 {
 
+#if EOOS_CPP_STANDARD >= 2011 && defined (EOOS_CPP_NOTHROW)
 
+/**
+ * @brief Empty class type used to disambiguate the overloads of throwing and non-throwing allocation.
+ */
+struct nothrow_t 
+{ 
+    explicit nothrow_t() = default; 
+};
+
+/**
+ * @brief Constant of type lib::nothrow_t used to disambiguate the overloads of throwing and non-throwing allocation functions.
+ */
+const ::std::nothrow_t nothrow { ::std::nothrow };
+
+#endif // EOOS_CPP_STANDARD >= 2011
 
 } // namespace sys
 } // namespace eoos

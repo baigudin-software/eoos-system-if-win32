@@ -27,12 +27,12 @@ public:
     /**
      * @brief Constructor.
      */
-    Object() = default;
+    Object() noexcept = default;
 
     /**
      * @brief Destructor.
      */
-    ~Object() override = default;
+    ~Object() noexcept override = default;
     
 protected:
 

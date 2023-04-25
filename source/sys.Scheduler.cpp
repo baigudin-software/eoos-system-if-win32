@@ -12,19 +12,19 @@ namespace eoos
 namespace sys
 {
     
-Scheduler::Scheduler()
+Scheduler::Scheduler() noexcept
     : NonCopyable()
     , api::Scheduler() {
     bool_t const isConstructed{ construct() };
     setConstructed( isConstructed );
 }
 
-bool_t Scheduler::isConstructed() const
+bool_t Scheduler::isConstructed() const noexcept
 {
     return Parent::isConstructed();
 }
 
-api::Thread* Scheduler::createThread(api::Task& task) try ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
+api::Thread* Scheduler::createThread(api::Task& task) noexcept try ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
 {
     lib::UniquePointer<Thread> res;
     if( isConstructed() )
@@ -43,7 +43,7 @@ api::Thread* Scheduler::createThread(api::Task& task) try ///< SCA AUTOSAR-C++14
     return NULLPTR;
 }
 
-bool_t Scheduler::sleep(int32_t ms) try
+bool_t Scheduler::sleep(int32_t ms) noexcept try
 {
     bool_t res{ false };
     if(ms >= 0)
@@ -56,14 +56,14 @@ bool_t Scheduler::sleep(int32_t ms) try
     return false;
 }
 
-void Scheduler::yield() try
+void Scheduler::yield() noexcept try
 {
     ::Sleep(0U);
 } catch (...) { ///< UT Justified Branch: OS dependency
     return;
 }
 
-bool_t Scheduler::construct() try
+bool_t Scheduler::construct() noexcept try
 {
     bool_t res{ false };
     while(true)

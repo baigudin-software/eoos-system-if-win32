@@ -46,7 +46,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override
+    bool_t isConstructed() const noexcept override
     {
         return Parent::isConstructed();
     }
@@ -54,7 +54,7 @@ public:
     /**
      * @copydoc eoos::api::StreamManager::getCout()
      */    
-    api::OutStream<char_t>& getCout() override
+    api::OutStream<char_t>& getCout() noexcept override
     {
         return cout_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
     }
@@ -62,7 +62,7 @@ public:
     /**
      * @copydoc eoos::api::StreamManager::getCerr()
      */
-    api::OutStream<char_t>& getCerr() override
+    api::OutStream<char_t>& getCerr() noexcept override
     {
         return cerr_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
     }    

@@ -45,7 +45,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override
+    bool_t isConstructed() const noexcept override
     {
         return Parent::isConstructed();
     }    
@@ -53,7 +53,7 @@ public:
     /**
      * @copydoc eoos::api::MutexManager::create()
      */
-    api::Mutex* create() override try
+    api::Mutex* create() noexcept override try
     {
         lib::UniquePointer<api::Mutex> res;
         if( isConstructed() )
@@ -75,7 +75,7 @@ public:
     /**
      * @copydoc eoos::api::MutexManager::remove()
      */
-    void remove(api::Mutex* mutex) override
+    void remove(api::Mutex* mutex) noexcept override
     {
         if( isConstructed() && mutex != NULLPTR )
         {

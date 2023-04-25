@@ -14,24 +14,24 @@ namespace sys
         
 api::System* System::eoos_{ NULLPTR };
 
-System::System() 
+System::System() noexcept
     : NonCopyable()
     , api::System() {
     bool_t const isConstructed{ construct() };
     setConstructed( isConstructed );
 }
 
-System::~System()
+System::~System() noexcept
 {
     eoos_ = NULLPTR;
 }
 
-bool_t System::isConstructed() const
+bool_t System::isConstructed() const noexcept
 {
     return Parent::isConstructed();
 }
 
-api::Heap& System::getHeap()
+api::Heap& System::getHeap() noexcept
 {
     if( !isConstructed() )
     {   ///< UT Justified Branch: HW dependency
@@ -40,7 +40,7 @@ api::Heap& System::getHeap()
     return heap_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-api::Scheduler& System::getScheduler()
+api::Scheduler& System::getScheduler() noexcept
 {
     if( !isConstructed() )
     {   ///< UT Justified Branch: HW dependency
@@ -49,7 +49,7 @@ api::Scheduler& System::getScheduler()
     return scheduler_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-bool_t System::hasMutexManager()
+bool_t System::hasMutexManager() noexcept
 {
     bool_t res{ true };
     if( !isConstructed() )
@@ -59,7 +59,7 @@ bool_t System::hasMutexManager()
     return res;
 }
 
-api::MutexManager& System::getMutexManager()
+api::MutexManager& System::getMutexManager() noexcept
 {
     if( !isConstructed() )
     {   ///< UT Justified Branch: HW dependency
@@ -68,7 +68,7 @@ api::MutexManager& System::getMutexManager()
     return mutex_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-bool_t System::hasSemaphoreManager()
+bool_t System::hasSemaphoreManager() noexcept
 {
     bool_t res{ true };
     if( !isConstructed() )
@@ -78,7 +78,7 @@ bool_t System::hasSemaphoreManager()
     return res;
 }
 
-api::SemaphoreManager& System::getSemaphoreManager()
+api::SemaphoreManager& System::getSemaphoreManager() noexcept
 {
     if( !isConstructed() )
     {   ///< UT Justified Branch: HW dependency
@@ -87,7 +87,7 @@ api::SemaphoreManager& System::getSemaphoreManager()
     return semaphore_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-bool_t System::hasStreamManager()
+bool_t System::hasStreamManager() noexcept
 {
     bool_t res{ true };
     if( !isConstructed() )
@@ -97,7 +97,7 @@ bool_t System::hasStreamManager()
     return res;
 }
 
-api::StreamManager& System::getStreamManager()
+api::StreamManager& System::getStreamManager() noexcept
 {
     if( !isConstructed() )
     {   ///< UT Justified Branch: HW dependency
@@ -106,13 +106,13 @@ api::StreamManager& System::getStreamManager()
     return stream_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1    
 }
 
-int32_t System::execute() const ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
+int32_t System::execute() const noexcept ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
 {
     char_t* args[]{ NULLPTR };
     return execute(0, args); ///< SCA AUTOSAR-C++14 Justified Rule A5-2-12
 }
 
-int32_t System::execute(int32_t argc, char_t* argv[]) const ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
+int32_t System::execute(int32_t argc, char_t* argv[]) const noexcept ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
 {
     int32_t error( static_cast<int32_t>(Error::OK) );
     if( isConstructed() && (argc >= 0) && (argv != NULLPTR) )
@@ -146,7 +146,7 @@ int32_t System::execute(int32_t argc, char_t* argv[]) const ///< SCA AUTOSAR-C++
     return error;
 }
 
-api::System& System::getSystem()
+api::System& System::getSystem() noexcept
 {
     if(eoos_ == NULLPTR)
     {   ///< UT Justified Branch: Startup dependency
@@ -155,15 +155,7 @@ api::System& System::getSystem()
     return *eoos_;
 }
 
-void System::exit(Error const error) ///< UT Justified Branch: OS dependency
-{
-    ::ExitProcess(static_cast< ::UINT >(error));
-    // This code must NOT be executed
-    // @todo throw an exection here is better.
-    while( true ){}
-}
-
-bool_t System::construct()
+bool_t System::construct() noexcept
 {
     bool_t res( false );
     while(true) 
@@ -201,6 +193,14 @@ bool_t System::construct()
         break;
     } ///< UT Justified Line: Compiler dependency
     return res;
+}
+
+void System::exit(Error const error) ///< UT Justified Branch: OS dependency
+{
+    ::ExitProcess(static_cast< ::UINT >(error));
+    // This code must NOT be executed
+    // @todo throw an exection here is better.
+    while( true ){}
 }
 
 } // namespace sys

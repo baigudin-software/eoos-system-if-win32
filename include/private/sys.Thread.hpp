@@ -30,7 +30,7 @@ public:
      *
      * @param task      A task interface whose main function is invoked when this thread is started.
      */
-    Thread(api::Task& task) ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
+    Thread(api::Task& task) noexcept ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
         : NonCopyable()
         , api::Thread()
         , task_(&task)       
@@ -45,7 +45,7 @@ public:
     /**
      * @brief Destructor.
      */
-    ~Thread() override
+    ~Thread() noexcept override
     {
         if(handle_ != NULLPTR)
         {
@@ -60,7 +60,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
+    bool_t isConstructed() const noexcept override ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
     {
         return Parent::isConstructed();
     }
@@ -68,7 +68,7 @@ public:
     /**
      * @copydoc eoos::api::Thread::execute()
      */
-    bool_t execute() override try
+    bool_t execute() noexcept override try
     {
         bool_t res{ false };
         if( isConstructed() && (status_ == STATUS_NEW) )
@@ -94,10 +94,10 @@ public:
     /**
      * @copydoc eoos::api::Thread::join()
      */
-    bool_t join() override try
+    bool_t join() noexcept override try
     {
         bool_t res{ false };
-	    if( isConstructed() )
+        if( isConstructed() )
         {
             ::DWORD const error{ ::WaitForSingleObject(handle_, INFINITE) };
             res = (error == 0U) ? true : false;
@@ -111,7 +111,7 @@ public:
     /**
      * @copydoc eoos::api::Thread::getPriority()
      */
-    int32_t getPriority() const override
+    int32_t getPriority() const noexcept override
     {
         return isConstructed() ? priority_ : PRIORITY_WRONG;        
     }
@@ -119,7 +119,7 @@ public:
     /**
      * @copydoc eoos::api::Thread::setPriority(int32_t)
      */
-    bool_t setPriority(int32_t priority) override
+    bool_t setPriority(int32_t priority) noexcept override
     {
         bool_t res{ false };
         if( isConstructed() )
@@ -150,7 +150,7 @@ private:
      *
      * @return True if object has been constructed successfully.
      */
-    bool_t construct() try
+    bool_t construct() noexcept try
     {  
         bool_t res{ false };
         while(true)

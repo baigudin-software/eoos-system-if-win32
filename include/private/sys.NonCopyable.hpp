@@ -26,12 +26,12 @@ public:
     /**
      * @brief Constructor.
      */
-    NonCopyable() = default;
+    NonCopyable() noexcept = default;
 
     /**
      * @brief Destructor.
      */
-    ~NonCopyable() override = default;
+    ~NonCopyable() noexcept override = default;
     
 private:
     

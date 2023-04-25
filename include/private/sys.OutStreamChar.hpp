@@ -160,7 +160,7 @@ private:
     /**
      * @brief Flushs stream.
      */    
-    void flushStream() const noexcept
+    void flushStream() const
     {
         static_cast<void>( ::FlushConsoleInputBuffer(handle_) );
     }    

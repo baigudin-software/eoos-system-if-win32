@@ -29,7 +29,7 @@ public:
      *
      * @param permits The initial number of permits available.
      */
-    explicit Semaphore(int32_t permits) 
+    explicit Semaphore(int32_t permits) noexcept 
         : NonCopyable()
         , api::Semaphore() {
         bool_t const isConstructed{ construct(permits) };
@@ -39,7 +39,7 @@ public:
     /**
      * @brief Destructor.
      */
-    ~Semaphore() override
+    ~Semaphore() noexcept override
     {
         if(handle_ != NULLPTR)
         {
@@ -52,7 +52,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
+    bool_t isConstructed() const noexcept override ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
     {
         return Parent::isConstructed();
     }
@@ -60,7 +60,7 @@ public:
     /**
      * @copydoc eoos::api::Semaphore::acquire()
      */
-    bool_t acquire() override try
+    bool_t acquire() noexcept override try
     {
         bool_t res{ false };
         if( isConstructed() ) 
@@ -76,7 +76,7 @@ public:
     /**
      * @copydoc eoos::api::Semaphore::release()
      */
-    void release() override try
+    void release() noexcept override try
     {
         if( isConstructed() )
         {
@@ -95,7 +95,7 @@ private:
      * @param permits The initial number of permits available.
      * @return true if object has been constructed successfully.
      */
-    bool_t construct(int32_t permits) try
+    bool_t construct(int32_t permits) noexcept try
     {
         bool_t res{ false };
         while(true)

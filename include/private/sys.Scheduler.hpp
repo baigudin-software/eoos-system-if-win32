@@ -27,32 +27,32 @@ public:
     /**
      * @brief Constructor.
      */
-    Scheduler();
+    Scheduler() noexcept;
 
     /**
      * @brief Destructor.
      */
-    ~Scheduler() override = default;
+    ~Scheduler() noexcept override = default;
 
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override; ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
+    bool_t isConstructed() const noexcept override; ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
 
     /**
      * @copydoc eoos::api::Scheduler::createThread(api::Task&)
      */     
-    api::Thread* createThread(api::Task& task) override; ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
+    api::Thread* createThread(api::Task& task) noexcept override; ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
     
     /**
      * @copydoc eoos::api::Scheduler::sleep(int32_t)
      */
-    bool_t sleep(int32_t ms) override;        
+    bool_t sleep(int32_t ms) noexcept override;
 
     /**
      * @copydoc eoos::api::Scheduler::yield()
      */
-    void yield() override;
+    void yield() noexcept override;
 
 private:
 
@@ -61,7 +61,7 @@ private:
      *
      * @return true if object has been constructed successfully.
      */
-    bool_t construct();
+    bool_t construct() noexcept;
     
     /**
      * @copydoc eoos::Object::Object(Object const&)

@@ -9,7 +9,7 @@
 #include "sys.NonCopyable.hpp"
 #include "api.System.hpp"
 #include "sys.Scheduler.hpp"
-#include "sys.MutexManager.hpp"	
+#include "sys.MutexManager.hpp"
 #include "sys.SemaphoreManager.hpp"
 #include "sys.StreamManager.hpp"
 #include "sys.Heap.hpp"
@@ -33,64 +33,64 @@ public:
     /**
      * @brief Constructor.
      */
-    System();
+    System() noexcept;
 
     /**
      * @brief Destructor.
      */
-    ~System() override;
+    ~System() noexcept override;
 
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const override; ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
+    bool_t isConstructed() const noexcept override; ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
     
     /**
      * @copydoc eoos::api::System::getHeap()
      */
-    api::Heap& getHeap() override;
+    api::Heap& getHeap() noexcept override;
 
     /**
      * @copydoc eoos::api::System::getScheduler()
      */
-    api::Scheduler& getScheduler() override;    
+    api::Scheduler& getScheduler() noexcept override;    
     
     /**
      * @copydoc eoos::api::System::hasMutexManager()
      */
-    bool_t hasMutexManager() override;
-	
+    bool_t hasMutexManager() noexcept override;
+
     /**
      * @copydoc eoos::api::System::getMutexManager()
      */
-    api::MutexManager& getMutexManager() override;
+    api::MutexManager& getMutexManager() noexcept override;
 
     /**
      * @copydoc eoos::api::System::hasSemaphoreManager()
      */
-    bool_t hasSemaphoreManager() override;
-	
+    bool_t hasSemaphoreManager() noexcept override;
+
     /**
      * @copydoc eoos::api::System::getSemaphoreManager()
      */
-    api::SemaphoreManager& getSemaphoreManager() override;
+    api::SemaphoreManager& getSemaphoreManager() noexcept override;
     
     /**
      * @copydoc eoos::api::System::hasStreamManager()
      */
-    bool_t hasStreamManager() override;
-	
+    bool_t hasStreamManager() noexcept override;
+
     /**
      * @copydoc eoos::api::System::getStreamManager()
      */
-    api::StreamManager& getStreamManager() override;
+    api::StreamManager& getStreamManager() noexcept override;
 
     /**
      * @brief Executes the operating system.
      *
      * @return Zero, or error code if the execution has been terminated.
      */
-    int32_t execute() const;
+    int32_t execute() const noexcept;
     
     /**
      * @brief Executes the operating system.
@@ -99,14 +99,14 @@ public:
      * @param argv An array of c-string of arguments where the last one - argc + 1 is null.  
      * @return Zero, or error code if the execution has been terminated.
      */
-    int32_t execute(int32_t argc, char_t* argv[]) const; ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
+    int32_t execute(int32_t argc, char_t* argv[]) const noexcept; ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
     
     /**
      * @brief Returns an only one created instance of the EOOS system.
      *
      * @return The EOOS system instance.
      */
-    static api::System& getSystem();
+    static api::System& getSystem() noexcept;
 
 private:
 
@@ -115,7 +115,7 @@ private:
      *
      * @return True if object has been constructed successfully.
      */
-    bool_t construct();
+    bool_t construct() noexcept;
     
     /**
      * @copydoc eoos::Object::Object(Object const&)
@@ -158,7 +158,7 @@ private:
      * @brief The operating system scheduler.
      */
     mutable Scheduler scheduler_{};
-	
+
     /**
      * @brief The mutex sub-system manager.
      */
