@@ -9,6 +9,7 @@
 #include "sys.NonCopyable.hpp"
 #include "api.OutStream.hpp"
 #include "lib.Memory.hpp"
+#include "lib.BaseString.hpp"
 
 namespace eoos
 {
@@ -75,7 +76,7 @@ public:
     }
     
     /**
-     * @copydoc eoos::api::OutStream::operator<<()
+     * @copydoc eoos::api::OutStream::operator<<(T const*)
      */
     OutStream<char_t>& operator<<(char_t const* source) noexcept override
     {
@@ -96,6 +97,15 @@ public:
             static_cast<void>( ::SetConsoleTextAttribute(handle_, lpConsoleScreenBufferInfo_.wAttributes) );
         }
         return *this;
+    }
+
+    /**
+     * @copydoc eoos::api::OutStream::operator<<(int32_t)
+     */
+    OutStream<char_t>& operator<<(int32_t value) noexcept override
+    {
+        lib::BaseString<char_t,16> str(value);
+        return this->operator<<( str.getChar() );
     }
 
     /**

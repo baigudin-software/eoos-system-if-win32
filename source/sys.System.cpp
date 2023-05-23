@@ -114,36 +114,7 @@ int32_t System::execute() const noexcept ///< SCA AUTOSAR-C++14 Justified Rule M
 
 int32_t System::execute(int32_t argc, char_t* argv[]) const noexcept ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
 {
-    int32_t error( static_cast<int32_t>(Error::OK) );
-    if( isConstructed() && (argc >= 0) && (argv != NULLPTR) )
-    {
-        lib::LinkedList<char_t*> args;
-        for(int32_t i(0); i<argc; i++)
-        {
-            if( argv[i] != NULLPTR )
-            {
-                if( args.add(argv[i]) )
-                {
-                    continue;
-                }
-            }
-            error = static_cast<int32_t>(Error::ARGUMENT);
-            break;
-        } ///< UT Justified Line: Compiler dependency
-        if( (error != static_cast<int32_t>(Error::ARGUMENT) ) && (argv[argc] != NULLPTR) )
-        {
-            error = static_cast<int32_t>(Error::ARGUMENT);
-        }
-        if( error != static_cast<int32_t>(Error::ARGUMENT) )
-        {
-            error = Program::start(args);
-        }
-    }
-    else
-    {
-        error = static_cast<int32_t>(Error::ARGUMENT);
-    }
-    return error;
+    return Program::start(argc, argv);
 }
 
 api::System& System::getSystem() noexcept
