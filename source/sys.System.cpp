@@ -15,7 +15,7 @@ namespace sys
 api::System* System::eoos_{ NULLPTR };
 
 System::System() noexcept
-    : NonCopyable()
+    : NonCopyable<NoAllocator>()
     , api::System() {
     bool_t const isConstructed{ construct() };
     setConstructed( isConstructed );

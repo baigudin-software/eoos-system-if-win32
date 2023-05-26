@@ -8,7 +8,7 @@
 
 #include "sys.NonCopyable.hpp"
 #include "api.StreamManager.hpp"
-#include "sys.OutStreamChar.hpp"
+#include "sys.OutStream.hpp"
 
 namespace eoos
 {
@@ -19,53 +19,36 @@ namespace sys
  * @class StreamManager.
  * @brief Stream sub-system manager.
  */
-class StreamManager : public NonCopyable, public api::StreamManager
+class StreamManager : public NonCopyable<NoAllocator>, public api::StreamManager
 {
-    using Parent = NonCopyable;
+    using Parent = NonCopyable<NoAllocator>;
 
 public:
 
     /**
      * @brief Constructor.
      */
-    StreamManager() noexcept 
-        : NonCopyable()
-        , api::StreamManager() {
-        setConstructed( true );
-    }
+    StreamManager() noexcept;
 
     /**
      * @brief Destructor.
      */
-    ~StreamManager() noexcept override
-    {
-        cout_.flush();
-        cerr_.flush();        
-    }
+    ~StreamManager() noexcept override;
 
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const noexcept override
-    {
-        return Parent::isConstructed();
-    }
+    bool_t isConstructed() const noexcept override;
     
     /**
      * @copydoc eoos::api::StreamManager::getCout()
      */    
-    api::OutStream<char_t>& getCout() noexcept override
-    {
-        return cout_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
-    }
+    api::OutStream<char_t>& getCout() noexcept override;
     
     /**
      * @copydoc eoos::api::StreamManager::getCerr()
      */
-    api::OutStream<char_t>& getCerr() noexcept override
-    {
-        return cerr_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
-    }    
+    api::OutStream<char_t>& getCerr() noexcept override;
 
 private:
     
@@ -92,12 +75,12 @@ private:
     /**
      * @brief The system output character stream.
      */
-    OutStreamChar cout_{OutStreamChar::Type::COUT};
+    OutStream cout_{OutStream::Type::COUT};
 
     /**
      * @brief The system error character stream.
      */
-    OutStreamChar cerr_{OutStreamChar::Type::CERR};    
+    OutStream cerr_{OutStream::Type::CERR};    
 
 };
 

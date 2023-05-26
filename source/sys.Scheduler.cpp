@@ -13,7 +13,7 @@ namespace sys
 {
     
 Scheduler::Scheduler() noexcept
-    : NonCopyable()
+    : NonCopyable<NoAllocator>()
     , api::Scheduler() {
     bool_t const isConstructed{ construct() };
     setConstructed( isConstructed );
@@ -26,10 +26,10 @@ bool_t Scheduler::isConstructed() const noexcept
 
 api::Thread* Scheduler::createThread(api::Task& task) noexcept try ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
 {
-    lib::UniquePointer<Thread> res;
+    lib::UniquePointer<api::Thread> res;
     if( isConstructed() )
     {
-        res.reset( new Thread(task) ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
+        res.reset( new Thread<Allocator>(task) ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
         if( !res.isNull() )
         {
             if( !res->isConstructed() )

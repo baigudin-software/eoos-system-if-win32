@@ -18,9 +18,9 @@ namespace sys
  * @class Scheduler
  * @brief Thread tasks scheduler class.
  */
-class Scheduler : public NonCopyable, public api::Scheduler
+class Scheduler : public NonCopyable<NoAllocator>, public api::Scheduler
 {
-    using Parent = NonCopyable;
+    using Parent = NonCopyable<NoAllocator>;
 
 public:
 

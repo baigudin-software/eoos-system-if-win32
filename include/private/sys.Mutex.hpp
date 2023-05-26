@@ -17,82 +17,45 @@ namespace sys
 /**
  * @class Mutex.
  * @brief Mutex class.
+ * 
+ * @tparam A Heap memory allocator class.
  */
-class Mutex : public NonCopyable, public api::Mutex
+template <class A>
+class Mutex : public NonCopyable<A>, public api::Mutex
 {
-    using Parent = NonCopyable;
+    using Parent = NonCopyable<A>;
 
 public:
 
     /**
      * @brief Constructor.
      */
-    Mutex() noexcept 
-        : NonCopyable()
-        , api::Mutex() {
-        bool_t const isConstructed{ construct() };
-        setConstructed( isConstructed );
-    }
+    Mutex() noexcept;
 
     /**
      * @brief Destructor.
      */
-    ~Mutex() noexcept override
-    {
-        ::DeleteCriticalSection(pcs_);
-    }
+    ~Mutex() noexcept override;
 
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    bool_t isConstructed() const noexcept override ///< SCA AUTOSAR-C++14 Defected Rule A10-2-1
-    {
-        return Parent::isConstructed();
-    }
+    bool_t isConstructed() const noexcept override;
     
     /**
      * @copydoc eoos::api::Mutex::tryLock()
      */
-    bool_t tryLock() noexcept override try
-    {
-        bool_t res{ false };
-        if( isConstructed() )
-        {
-            res = ::TryEnterCriticalSection(pcs_) != 0;
-        }
-        return res;
-    } catch (...) { ///< UT Justified Branch: OS dependency
-        return false;
-    }    
+    bool_t tryLock() noexcept override;
 
     /**
      * @copydoc eoos::api::Mutex::lock()
      */
-    bool_t lock() noexcept override try
-    {
-        bool_t res{ false };
-        if( isConstructed() )
-        {
-            ::EnterCriticalSection(pcs_);
-            res = true;
-        }
-        return res;
-    } catch (...) { ///< UT Justified Branch: OS dependency
-        return false;
-    }
+    bool_t lock() noexcept override;
 
     /**
      * @copydoc eoos::api::Mutex::unlock()
      */
-    void unlock() noexcept override try
-    {
-        if( isConstructed() )
-        {
-            ::LeaveCriticalSection(pcs_);
-        }
-    } catch (...) { ///< UT Justified Branch: OS dependency
-        return;
-    }
+    void unlock() noexcept override;
 
 private:
 
@@ -101,28 +64,7 @@ private:
      *
      * @return True if object has been constructed successfully.
      */
-    bool_t construct() const noexcept try
-    {
-        bool_t res{ false };
-        while(true)
-        {   
-            if( !isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                break;
-            }
-            ::DWORD const spinCount{ 4000U };
-            ::BOOL const isInitialize{ ::InitializeCriticalSectionAndSpinCount(pcs_, spinCount) };
-            if(isInitialize == 0)
-            {   ///< UT Justified Branch: OS dependency
-                break;
-            }
-            res = true;
-            break;
-        }
-        return res;
-    } catch (...) { ///< UT Justified Branch: OS dependency
-        return false;
-    }
+    bool_t construct() const noexcept;
     
     /**
      * @copydoc eoos::Object::Object(Object const&)
@@ -155,6 +97,88 @@ private:
     ::LPCRITICAL_SECTION const pcs_{ &cs_ };    
 
 };
+
+template <class A>
+Mutex<A>::Mutex() noexcept
+    : NonCopyable<A>()
+    , api::Mutex() {
+    bool_t const isConstructed{ construct() };
+    setConstructed( isConstructed );
+}
+
+template <class A>
+Mutex<A>::~Mutex() noexcept
+{
+    ::DeleteCriticalSection(pcs_);
+}
+
+template <class A>
+bool_t Mutex<A>::isConstructed() const noexcept
+{
+    return Parent::isConstructed();
+}
+
+template <class A>
+bool_t Mutex<A>::tryLock() noexcept try
+{
+    bool_t res{ false };
+    if( isConstructed() )
+    {
+        res = ::TryEnterCriticalSection(pcs_) != 0;
+    }
+    return res;
+} catch (...) { ///< UT Justified Branch: OS dependency
+    return false;
+}    
+
+template <class A>
+bool_t Mutex<A>::lock() noexcept try
+{
+    bool_t res{ false };
+    if( isConstructed() )
+    {
+        ::EnterCriticalSection(pcs_);
+        res = true;
+    }
+    return res;
+} catch (...) { ///< UT Justified Branch: OS dependency
+    return false;
+}
+
+template <class A>
+void Mutex<A>::unlock() noexcept try
+{
+    if( isConstructed() )
+    {
+        ::LeaveCriticalSection(pcs_);
+    }
+} catch (...) { ///< UT Justified Branch: OS dependency
+    return;
+}
+
+template <class A>
+bool_t Mutex<A>::construct() const noexcept try
+{
+    bool_t res{ false };
+    while(true)
+    {   
+        if( !isConstructed() )
+        {   ///< UT Justified Branch: HW dependency
+            break;
+        }
+        ::DWORD const spinCount{ 4000U };
+        ::BOOL const isInitialize{ ::InitializeCriticalSectionAndSpinCount(pcs_, spinCount) };
+        if(isInitialize == 0)
+        {   ///< UT Justified Branch: OS dependency
+            break;
+        }
+        res = true;
+        break;
+    }
+    return res;
+} catch (...) { ///< UT Justified Branch: OS dependency
+    return false;
+}
 
 } // namespace sys
 } // namespace eoos
