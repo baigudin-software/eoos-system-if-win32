@@ -50,6 +50,26 @@ public:
      */
     api::OutStream<char_t>& getCerr() noexcept override;
 
+    /**
+     * @copydoc eoos::api::StreamManager::setCout(api::OutStream<char_t>&)
+     */
+    bool_t setCout(api::OutStream<char_t>& cout) noexcept override;
+
+    /**
+     * @copydoc eoos::api::StreamManager::setCerr(api::OutStream<char_t>&)
+     */
+    bool_t setCerr(api::OutStream<char_t>& cerr) noexcept override;
+
+    /**
+     * @copydoc eoos::api::StreamManager::resetCout()
+     */
+    void resetCout() noexcept override;
+
+    /**
+     * @copydoc eoos::api::StreamManager::resetCerr()
+     */
+    void resetCerr() noexcept override;
+
 private:
     
     /**
@@ -75,12 +95,22 @@ private:
     /**
      * @brief The system output character stream.
      */
-    OutStream cout_{OutStream::Type::COUT};
+    OutStream coutDef_{ OutStream::Type::COUT };
 
     /**
      * @brief The system error character stream.
      */
-    OutStream cerr_{OutStream::Type::CERR};    
+    OutStream cerrDef_{ OutStream::Type::CERR };
+    
+    /**
+     * @brief The system output character stream.
+     */    
+    api::OutStream<char_t>* cout_{ &coutDef_ };
+
+    /**
+     * @brief The system error character stream.
+     */    
+    api::OutStream<char_t>* cerr_{ &cerrDef_ };    
 
 };
 

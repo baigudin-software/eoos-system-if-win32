@@ -49,33 +49,13 @@ api::Scheduler& System::getScheduler() noexcept
     return scheduler_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
-bool_t System::hasMutexManager() noexcept
-{
-    bool_t res{ true };
-    if( !isConstructed() )
-    {
-        res = false;
-    }
-    return res;
-}
-
 api::MutexManager& System::getMutexManager() noexcept
 {
     if( !isConstructed() )
     {   ///< UT Justified Branch: HW dependency
         exit(Error::SYSCALL_CALLED);
     }
-    return mutex_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
-}
-
-bool_t System::hasSemaphoreManager() noexcept
-{
-    bool_t res{ true };
-    if( !isConstructed() )
-    {
-        res = false;
-    }
-    return res;
+    return mutexManager_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::SemaphoreManager& System::getSemaphoreManager() noexcept
@@ -84,17 +64,7 @@ api::SemaphoreManager& System::getSemaphoreManager() noexcept
     {   ///< UT Justified Branch: HW dependency
         exit(Error::SYSCALL_CALLED);
     }
-    return semaphore_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
-}
-
-bool_t System::hasStreamManager() noexcept
-{
-    bool_t res{ true };
-    if( !isConstructed() )
-    {
-        res = false;
-    }
-    return res;
+    return semaphoreManager_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::StreamManager& System::getStreamManager() noexcept
@@ -103,13 +73,7 @@ api::StreamManager& System::getStreamManager() noexcept
     {   ///< UT Justified Branch: HW dependency
         exit(Error::SYSCALL_CALLED);
     }
-    return stream_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1    
-}
-
-int32_t System::execute() const noexcept ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
-{
-    char_t* args[]{ NULLPTR };
-    return execute(0, args); ///< SCA AUTOSAR-C++14 Justified Rule A5-2-12
+    return streamManager_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1    
 }
 
 int32_t System::execute(int32_t argc, char_t* argv[]) const noexcept ///< SCA AUTOSAR-C++14 Justified Rule A8-4-8
@@ -128,41 +92,22 @@ api::System& System::getSystem() noexcept
 
 bool_t System::construct() noexcept
 {
-    bool_t res( false );
-    while(true) 
+    bool_t res{ false };
+    do 
     {
-        if( !isConstructed() )
+        if( ( !isConstructed() )
+         || ( eoos_ != NULLPTR )
+         || ( !heap_.isConstructed() )
+         || ( !scheduler_.isConstructed() )
+         || ( !mutexManager_.isConstructed() )
+         || ( !semaphoreManager_.isConstructed() )
+         || ( !streamManager_.isConstructed() ) ) 
         {   ///< UT Justified Branch: HW dependency
             break;
-        }
-        if( eoos_ != NULLPTR )
-        {   ///< UT Justified Branch: Startup dependency
-            break;
-        }        
-        if( !scheduler_.isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
-        if( !heap_.isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
-        if( !mutex_.isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
-        if( !semaphore_.isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
-        if( !stream_.isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }        
+        }                
         eoos_ = this;
         res = true;
-        break;
-    } ///< UT Justified Line: Compiler dependency
+    } while(false);    
     return res;
 }
 

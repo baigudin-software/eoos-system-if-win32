@@ -42,13 +42,5 @@ api::Semaphore* SemaphoreManager::create(int32_t permits) noexcept try
     return NULLPTR;
 }
 
-void SemaphoreManager::remove(api::Semaphore* semaphore) noexcept
-{
-    if( isConstructed() && semaphore != NULLPTR )
-    {
-        delete semaphore;
-    }
-}
-
 } // namespace sys
 } // namespace eoos

@@ -55,7 +55,7 @@ public:
     /**
      * @copydoc eoos::api::Mutex::unlock()
      */
-    void unlock() noexcept override;
+    bool_t unlock() noexcept override;
 
 private:
 
@@ -146,14 +146,17 @@ bool_t Mutex<A>::lock() noexcept try
 }
 
 template <class A>
-void Mutex<A>::unlock() noexcept try
+bool_t Mutex<A>::unlock() noexcept try
 {
+    bool_t res{ false };    
     if( isConstructed() )
     {
         ::LeaveCriticalSection(pcs_);
+        res = true;
     }
+    return res;
 } catch (...) { ///< UT Justified Branch: OS dependency
-    return;
+    return false;
 }
 
 template <class A>

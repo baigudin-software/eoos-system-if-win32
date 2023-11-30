@@ -52,7 +52,7 @@ public:
     /**
      * @copydoc eoos::api::Semaphore::release()
      */
-    void release() noexcept override;
+    bool_t release() noexcept override;
 
 private:
 
@@ -70,8 +70,9 @@ private:
      * The function releases from the permits and returns these to the semaphore.
      *
      * @param permits The number of permits to release.
+     * @return True if the semaphore is released.
      */
-    void release(int32_t permits) const;	
+    bool_t release(int32_t permits) const;	
 
     /**
      * @copydoc eoos::Object::Object(Object const&)
@@ -144,14 +145,16 @@ bool_t Semaphore<A>::acquire() noexcept try
 }
 
 template <class A>
-void Semaphore<A>::release() noexcept try
+bool_t Semaphore<A>::release() noexcept try
 {
+    bool_t res{ false };
     if( isConstructed() )
     {
-        release(1);
+        res = release(1);
     }
+    return res;
 } catch (...) { ///< UT Justified Branch: OS dependency
-    return;
+    return false;
 }
 
 template <class A>
@@ -199,10 +202,11 @@ bool_t Semaphore<A>::construct(int32_t permits) noexcept try
 }
 
 template <class A>
-void Semaphore<A>::release(int32_t permits) const ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
+bool_t Semaphore<A>::release(int32_t permits) const ///< SCA AUTOSAR-C++14 Justified Rule M9-3-3
 {
     ::LONG const lReleaseCount{ static_cast< ::LONG >(permits) };
-    static_cast<void>( ::ReleaseSemaphore(handle_, lReleaseCount, NULL) );
+    ::BOOL res{ ::ReleaseSemaphore(handle_, lReleaseCount, NULL) };
+    return res != 0;
 }
         
 } // namespace sys

@@ -56,19 +56,9 @@ public:
     api::Scheduler& getScheduler() noexcept override;    
     
     /**
-     * @copydoc eoos::api::System::hasMutexManager()
-     */
-    bool_t hasMutexManager() noexcept override;
-
-    /**
      * @copydoc eoos::api::System::getMutexManager()
      */
     api::MutexManager& getMutexManager() noexcept override;
-
-    /**
-     * @copydoc eoos::api::System::hasSemaphoreManager()
-     */
-    bool_t hasSemaphoreManager() noexcept override;
 
     /**
      * @copydoc eoos::api::System::getSemaphoreManager()
@@ -76,22 +66,10 @@ public:
     api::SemaphoreManager& getSemaphoreManager() noexcept override;
     
     /**
-     * @copydoc eoos::api::System::hasStreamManager()
-     */
-    bool_t hasStreamManager() noexcept override;
-
-    /**
      * @copydoc eoos::api::System::getStreamManager()
      */
     api::StreamManager& getStreamManager() noexcept override;
 
-    /**
-     * @brief Executes the operating system.
-     *
-     * @return Zero, or error code if the execution has been terminated.
-     */
-    int32_t execute() const noexcept;
-    
     /**
      * @brief Executes the operating system.
      *
@@ -162,17 +140,17 @@ private:
     /**
      * @brief The mutex sub-system manager.
      */
-    MutexManager mutex_{};
+    MutexManager mutexManager_{};
 
     /**
      * @brief The semaphore sub-system manager.
      */
-    SemaphoreManager semaphore_{};
+    SemaphoreManager semaphoreManager_{};
     
     /**
      * @brief The stream sub-system manager.
      */
-    StreamManager stream_{};
+    StreamManager streamManager_{};
 
 };
 

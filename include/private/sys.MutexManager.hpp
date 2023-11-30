@@ -44,11 +44,6 @@ public:
      */
     api::Mutex* create() noexcept override;
 
-    /**
-     * @copydoc eoos::api::MutexManager::remove()
-     */
-    void remove(api::Mutex* mutex) noexcept override;
-
 private:
     
     /**

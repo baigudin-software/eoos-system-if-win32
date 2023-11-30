@@ -44,11 +44,6 @@ public:
      */
     api::Semaphore* create(int32_t permits) noexcept override;
 
-    /**
-     * @copydoc eoos::api::SemaphoreManager::remove()
-     */
-    void remove(api::Semaphore* semaphore) noexcept override;
-
 private:
     
     /**

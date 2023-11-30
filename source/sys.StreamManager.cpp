@@ -18,8 +18,8 @@ StreamManager::StreamManager() noexcept
 
 StreamManager::~StreamManager() noexcept
 {
-    cout_.flush();
-    cerr_.flush();        
+    cout_->flush();
+    cerr_->flush();        
 }
 
 bool_t StreamManager::isConstructed() const noexcept
@@ -29,13 +29,45 @@ bool_t StreamManager::isConstructed() const noexcept
 
 api::OutStream<char_t>& StreamManager::getCout() noexcept
 {
-    return cout_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
+    return *cout_;
 }
 
 api::OutStream<char_t>& StreamManager::getCerr() noexcept
 {
-    return cerr_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
-}    
+    return *cerr_;
+}
+
+bool_t StreamManager::setCout(api::OutStream<char_t>& cout) noexcept
+{
+    bool_t res( false );
+    if( isConstructed() )
+    {
+        cout_ = &cout;
+        res = true;
+    }
+    return res;
+}
+
+bool_t StreamManager::setCerr(api::OutStream<char_t>& cerr) noexcept
+{
+    bool_t res( false );
+    if( isConstructed() )
+    {
+        cerr_ = &cerr;
+        res = true;
+    }
+    return res;
+}
+
+void StreamManager::resetCout() noexcept
+{
+    cout_ = &coutDef_;
+}
+
+void StreamManager::resetCerr() noexcept
+{
+    cerr_ = &cerrDef_;
+}
 
 } // namespace sys
 } // namespace eoos

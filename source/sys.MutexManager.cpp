@@ -42,13 +42,5 @@ api::Mutex* MutexManager::create() noexcept try
     return NULLPTR;
 }
 
-void MutexManager::remove(api::Mutex* mutex) noexcept
-{
-    if( isConstructed() && mutex != NULLPTR )
-    {
-        delete mutex;
-    }
-}
-
 } // namespace sys
 } // namespace eoos
