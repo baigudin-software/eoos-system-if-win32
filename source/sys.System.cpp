@@ -33,46 +33,26 @@ bool_t System::isConstructed() const noexcept
 
 api::Heap& System::getHeap() noexcept
 {
-    if( !isConstructed() )
-    {   ///< UT Justified Branch: HW dependency
-        exit(Error::SYSCALL_CALLED);
-    }
     return heap_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::Scheduler& System::getScheduler() noexcept
 {
-    if( !isConstructed() )
-    {   ///< UT Justified Branch: HW dependency
-        exit(Error::SYSCALL_CALLED);
-    }
     return scheduler_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::MutexManager& System::getMutexManager() noexcept
 {
-    if( !isConstructed() )
-    {   ///< UT Justified Branch: HW dependency
-        exit(Error::SYSCALL_CALLED);
-    }
     return mutexManager_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::SemaphoreManager& System::getSemaphoreManager() noexcept
 {
-    if( !isConstructed() )
-    {   ///< UT Justified Branch: HW dependency
-        exit(Error::SYSCALL_CALLED);
-    }
     return semaphoreManager_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1
 }
 
 api::StreamManager& System::getStreamManager() noexcept
 {
-    if( !isConstructed() )
-    {   ///< UT Justified Branch: HW dependency
-        exit(Error::SYSCALL_CALLED);
-    }
     return streamManager_; ///< SCA AUTOSAR-C++14 Justified Rule A9-3-1    
 }
 
@@ -85,7 +65,7 @@ api::System& System::getSystem() noexcept
 {
     if(eoos_ == NULLPTR)
     {   ///< UT Justified Branch: Startup dependency
-        exit(Error::SYSCALL_CALLED);
+        ::ExitProcess(static_cast< ::UINT >(Error::SYSCALL_CALLED));
     }
     return *eoos_;
 }
@@ -93,30 +73,18 @@ api::System& System::getSystem() noexcept
 bool_t System::construct() noexcept
 {
     bool_t res{ false };
-    do 
-    {
-        if( ( !isConstructed() )
-         || ( eoos_ != NULLPTR )
-         || ( !heap_.isConstructed() )
-         || ( !scheduler_.isConstructed() )
-         || ( !mutexManager_.isConstructed() )
-         || ( !semaphoreManager_.isConstructed() )
-         || ( !streamManager_.isConstructed() ) ) 
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }                
+    if( ( isConstructed() )
+     && ( eoos_ == NULLPTR )
+     && ( heap_.isConstructed() )
+     && ( scheduler_.isConstructed() )
+     && ( mutexManager_.isConstructed() )
+     && ( semaphoreManager_.isConstructed() )
+     && ( streamManager_.isConstructed() ) ) 
+    {                
         eoos_ = this;
         res = true;
-    } while(false);    
+    }
     return res;
-}
-
-void System::exit(Error const error) ///< UT Justified Branch: OS dependency
-{
-    ::ExitProcess(static_cast< ::UINT >(error));
-    // This code must NOT be executed
-    // @todo throw an exection here is better.
-    while( true ){}
 }
 
 } // namespace sys

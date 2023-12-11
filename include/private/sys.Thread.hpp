@@ -186,10 +186,6 @@ bool_t Thread<A>::execute() noexcept try
             status_ = STATUS_RUNNABLE;
             res = true;
         }
-        else
-        {   ///< UT Justified Branch: OS dependency
-            status_ = STATUS_DEAD;
-        }
     }
     return res;
 } catch (...) { ///< UT Justified Branch: OS dependency
@@ -201,7 +197,7 @@ template <class A>
 bool_t Thread<A>::join() noexcept try
 {
     bool_t res{ false };
-    if( isConstructed() )
+    if( isConstructed() && (status_ == STATUS_RUNNABLE) )
     {
         ::DWORD const error{ ::WaitForSingleObject(handle_, INFINITE) };
         res = (error == 0U) ? true : false;
@@ -247,20 +243,8 @@ template <class A>
 bool_t Thread<A>::construct() noexcept try
 {  
     bool_t res{ false };
-    while(true)
+    if( isConstructed() && Parent::isConstructed(task_) )
     {
-        if( !isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
-        if( task_ == NULLPTR )
-        {   ///< UT Justified Branch: OS dependency
-            break;
-        }
-        if( !task_->isConstructed() )
-        {
-            break;
-        }
         // A pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned handle 
         // can be inherited by child processes. If lpThreadAttributes is NULL, the handle cannot be inherited.
         // The lpSecurityDescriptor member of the structure specifies a security descriptor for the new thread. 
@@ -298,15 +282,13 @@ bool_t Thread<A>::construct() noexcept try
             dwCreationFlags, 
             lpThreadId
         ) };
-        if(handle == NULLPTR)
-        {   ///< UT Justified Branch: OS dependency
-            break;
+        if(handle != NULLPTR)
+        {
+            status_ = STATUS_NEW;
+            handle_ = handle;
+            res = true;
         }
-        status_ = STATUS_NEW;
-        handle_ = handle;
-        res = true;
-        break;
-    } ///< UT Justified Line: Compiler dependency
+    }
     if( res == false )
     {
         status_ = STATUS_DEAD;

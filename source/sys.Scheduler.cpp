@@ -56,34 +56,28 @@ bool_t Scheduler::sleep(int32_t ms) noexcept try
     return false;
 }
 
-void Scheduler::yield() noexcept try
+bool_t Scheduler::yield() noexcept try
 {
     ::Sleep(0U);
+    return true;
 } catch (...) { ///< UT Justified Branch: OS dependency
-    return;
+    return false;
 }
 
 bool_t Scheduler::construct() noexcept try
 {
     bool_t res{ false };
-    while(true)
+    if( isConstructed() )
     {
-        if( !isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
         processHandle_ = ::GetCurrentProcess();
-        if(processHandle_ == NULLPTR)
-        {   ///< UT Justified Branch: OS dependency
-            break;
+        if(processHandle_ != NULLPTR)
+        {
+            processPriority_ = ::GetPriorityClass(processHandle_);
+            if(processPriority_ != 0U)
+            {
+                res = true;
+            }
         }
-        processPriority_ = ::GetPriorityClass(processHandle_);
-        if(processPriority_ == 0U)
-        {   ///< UT Justified Branch: OS dependency
-            break;
-        }
-        res = true;
-        break;
     }
     return res;
 } catch (...) { ///< UT Justified Branch: OS dependency

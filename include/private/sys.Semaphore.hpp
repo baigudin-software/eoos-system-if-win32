@@ -161,41 +161,30 @@ template <class A>
 bool_t Semaphore<A>::construct(int32_t permits) noexcept try
 {
     bool_t res{ false };
-    while(true)
+    if( isConstructed() && (permits >= 0) )
     {
-        if( !isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
-        if( permits < 0 )
-        {
-            break;
-        }
         // To comply SCA AUTOSAR-C++14 M0-1-2 and to check permits is not more than MAXIMUM_COUNT 
         // if the maximum would be changed, the values are explicitly casted to int64_t.
         // Thus, if MAXIMUM_COUNT would be less than 0x7FFFFFFF, we have to cast to int32_t back.
-        if( static_cast<int64_t>(permits) > static_cast<int64_t>(MAXIMUM_COUNT) )
-        {   ///< UT Justified Branch: SCA dependency
-            break;
-        }            
-        ::LPSECURITY_ATTRIBUTES const lpSemaphoreAttributes{ NULL };
-        ::LONG const lInitialCount{ permits };
-        ::LONG const lMaximumCount{ MAXIMUM_COUNT };
-        ::LPCSTR lpName{ NULL };
-        ::HANDLE const handle{ ::CreateSemaphore(
-            lpSemaphoreAttributes,
-            lInitialCount,
-            lMaximumCount,
-            lpName
-        ) };
-        if(handle == NULLPTR)
-        {   ///< UT Justified Branch: OS dependency
-            break;
+        if( static_cast<int64_t>(permits) <= static_cast<int64_t>(MAXIMUM_COUNT) )
+        {            
+            ::LPSECURITY_ATTRIBUTES const lpSemaphoreAttributes{ NULL };
+            ::LONG const lInitialCount{ permits };
+            ::LONG const lMaximumCount{ MAXIMUM_COUNT };
+            ::LPCSTR lpName{ NULL };
+            ::HANDLE const handle{ ::CreateSemaphore(
+                lpSemaphoreAttributes,
+                lInitialCount,
+                lMaximumCount,
+                lpName
+            ) };
+            if(handle != NULLPTR)
+            {
+                handle_ = handle;
+                res = true;
+            }
         }
-        handle_ = handle;
-        res = true;
-        break;
-    } ///< UT Justified Line: Compiler dependency
+    }
     return res;
 }  catch (...) { ///< UT Justified Branch: OS dependency
     return false;

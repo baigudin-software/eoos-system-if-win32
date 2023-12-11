@@ -114,13 +114,6 @@ private:
      * @copydoc eoos::Object::operator=(Object&&)
      */
     System& operator=(System&&) & noexcept = delete;    
-    
-    /**
-     * @brief Terminates the system execution.
-     *
-     * @param Error an exit code.
-     */
-    static void exit(Error error);
 
     /**
      * @brief The operating system.

@@ -129,7 +129,7 @@ bool_t Mutex<A>::tryLock() noexcept try
     return res;
 } catch (...) { ///< UT Justified Branch: OS dependency
     return false;
-}    
+}
 
 template <class A>
 bool_t Mutex<A>::lock() noexcept try
@@ -163,20 +163,14 @@ template <class A>
 bool_t Mutex<A>::construct() const noexcept try
 {
     bool_t res{ false };
-    while(true)
-    {   
-        if( !isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
+    if( isConstructed() )
+    {
         ::DWORD const spinCount{ 4000U };
         ::BOOL const isInitialize{ ::InitializeCriticalSectionAndSpinCount(pcs_, spinCount) };
-        if(isInitialize == 0)
-        {   ///< UT Justified Branch: OS dependency
-            break;
+        if(isInitialize != 0)
+        {
+            res = true;
         }
-        res = true;
-        break;
     }
     return res;
 } catch (...) { ///< UT Justified Branch: OS dependency

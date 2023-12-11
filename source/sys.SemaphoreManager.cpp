@@ -30,7 +30,7 @@ api::Semaphore* SemaphoreManager::create(int32_t permits) noexcept try
     {
         res.reset( new Semaphore<Allocator>(permits) ); ///< SCA AUTOSAR-C++14 Justified Rule A18-5-2
         if( !res.isNull() )
-        {   ///< UT Justified Branch: HW dependency
+        {
             if( !res->isConstructed() )
             {
                 res.reset();

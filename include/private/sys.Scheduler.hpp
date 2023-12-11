@@ -52,7 +52,7 @@ public:
     /**
      * @copydoc eoos::api::Scheduler::yield()
      */
-    void yield() noexcept override;
+    bool_t yield() noexcept override;
 
 private:
 

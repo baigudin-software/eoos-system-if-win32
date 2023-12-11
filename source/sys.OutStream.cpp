@@ -79,12 +79,8 @@ api::OutStream<char_t>& OutStream::flush() noexcept
 bool_t OutStream::construct() noexcept try
 {
     bool_t res{ false };
-    while(true)
-    {   
-        if( !isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
+    if( isConstructed() )
+    {
         DWORD nStdHandle;
         if(type_ == Type::COUT)
         {
@@ -95,22 +91,19 @@ bool_t OutStream::construct() noexcept try
             nStdHandle = STD_ERROR_HANDLE;
         }
         handle_ = ::GetStdHandle(nStdHandle);
-        if( handle_ == INVALID_HANDLE_VALUE ) ///< SCA AUTOSAR-C++14 Justified Rule M5-2-8 and Rule A5-2-2
-        {   ///< UT Justified Branch: OS dependency
-            break;
+        if( handle_ != INVALID_HANDLE_VALUE ) ///< SCA AUTOSAR-C++14 Justified Rule M5-2-8 and Rule A5-2-2
+        {
+            // Don't check on NULL here as:
+            // If an application does not have associated standard handles, such as a service running 
+            // on an interactive desktop, and has not redirected them, the return value is NULL.
+            // Thus, if an output handle is not exist, will flush the stream nowhere.
+            ::BOOL isGot( ::GetConsoleScreenBufferInfo(handle_, &lpConsoleScreenBufferInfo_) );
+            if( isGot != 0 )
+            {
+                res = true;
+            }
         }
-        // Don't check on NULL here as:
-        // If an application does not have associated standard handles, such as a service running 
-        // on an interactive desktop, and has not redirected them, the return value is NULL.
-        // Thus, if an output handle is not exist, will flush the stream nowhere.
-        ::BOOL isGot( ::GetConsoleScreenBufferInfo(handle_, &lpConsoleScreenBufferInfo_) );
-        if( isGot == 0 )
-        {   ///< UT Justified Branch: OS dependency
-            break;
-        }
-        res = true;
-        break;
-    } ///< UT Justified Line: Compiler dependency
+    }
     return res;
 } catch (...) { ///< UT Justified Branch: OS dependency
     return false;
