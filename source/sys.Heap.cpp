@@ -28,7 +28,7 @@ void* Heap::allocate(size_t const size, void* ptr) noexcept try
     static_cast<void>(size); // Avoid MISRA-C++:2008 Rule 0–1–3 and AUTOSAR C++14 Rule A0-1-4
     return NULLPTR;
     #endif // EOOS_GLOBAL_ENABLE_NO_HEAP
-} catch (...) {
+} catch (...) { ///< UT Justified Branch: OS dependency
     return NULLPTR;
 }
 
